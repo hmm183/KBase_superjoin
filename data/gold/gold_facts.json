@@ -1,0 +1,411 @@
+[
+  {
+    "fact_id": "gold_dlhv_adj_ebitda_ar_fy24",
+    "fingerprint": "FP_DELHIVERYLIMITED_ADJUSTEDEBITDA_FY202324_569730fe4e28",
+    "subject": {
+      "entity_id": "ent_delhivery",
+      "canonical_name": "Delhivery Limited",
+      "aliases": [
+        "Delhivery",
+        "DLHV"
+      ],
+      "entity_type": "ORGANIZATION"
+    },
+    "predicate": {
+      "metric_id": "met_adj_ebitda",
+      "name": "Adjusted EBITDA",
+      "category": "FINANCIAL",
+      "standard_definition": "Profit before exceptional items, finance costs, depreciation and amortization"
+    },
+    "value": {
+      "raw_text": "\u20b9126.6 Cr",
+      "normalized_value": 126.6,
+      "unit": "inr_crore",
+      "scale_multiplier": 10000000.0,
+      "currency": "INR"
+    },
+    "temporal": {
+      "reference_period": "FY2023-24",
+      "period_start": "2023-04-01",
+      "period_end": "2024-03-31",
+      "publication_time": "2024-08-01T00:00:00Z",
+      "data_vintage": "FY24-AR",
+      "observation_type": "actual"
+    },
+    "scope_accounting": "CONSOLIDATED",
+    "provenance": {
+      "document_id": "02-delhivery-annual-report-fy24-excerpt.pdf",
+      "document_title": "Delhivery Annual Report FY 2023-24",
+      "document_hash": "hash_dlhv_ar24",
+      "page_number": 36,
+      "bounding_box": null,
+      "table_cell": "Financial Highlights Table, Row 3",
+      "raw_snippet": "Adjusted EBITDA for FY24 stood at positive \u20b9126.6 Cr against a loss in FY23.",
+      "parser_engine": "docling_v2",
+      "parser_confidence": 0.95,
+      "evidence_id": null
+    },
+    "confidence_score": 1.0,
+    "independent_source_count": 1,
+    "citations": [],
+    "created_at": null
+  },
+  {
+    "fact_id": "gold_dlhv_adj_ebitda_pres_fy24",
+    "fingerprint": "FP_DELHIVERYLIMITED_ADJUSTEDEBITDA_FY202324_569730fe4e28",
+    "subject": {
+      "entity_id": "ent_delhivery",
+      "canonical_name": "Delhivery Limited",
+      "aliases": [
+        "Delhivery"
+      ],
+      "entity_type": "ORGANIZATION"
+    },
+    "predicate": {
+      "metric_id": "met_adj_ebitda",
+      "name": "Adjusted EBITDA",
+      "category": "FINANCIAL",
+      "standard_definition": "Adjusted EBITDA after corporate allocation"
+    },
+    "value": {
+      "raw_text": "\u20b9126.6 Cr",
+      "normalized_value": 126.6,
+      "unit": "inr_crore",
+      "scale_multiplier": 10000000.0,
+      "currency": "INR"
+    },
+    "temporal": {
+      "reference_period": "FY2023-24",
+      "period_start": "2023-04-01",
+      "period_end": "2024-03-31",
+      "publication_time": "2024-05-17T00:00:00Z",
+      "data_vintage": "FY24-Q4-Pres",
+      "observation_type": "actual"
+    },
+    "scope_accounting": "CONSOLIDATED",
+    "provenance": {
+      "document_id": "03-delhivery-q4-fy24-earnings-presentation.pdf",
+      "document_title": "Delhivery Q4 FY24 Earnings Presentation",
+      "document_hash": "hash_dlhv_pres24",
+      "page_number": 6,
+      "bounding_box": null,
+      "table_cell": "Slide 6, Key Metrics Table",
+      "raw_snippet": "Full year FY24 Adjusted EBITDA was \u20b9126.6 Cr.",
+      "parser_engine": "docling_v2",
+      "parser_confidence": 0.95,
+      "evidence_id": null
+    },
+    "confidence_score": 1.0,
+    "independent_source_count": 1,
+    "citations": [],
+    "created_at": null
+  },
+  {
+    "fact_id": "gold_dlhv_ebitda_parser_conflict",
+    "fingerprint": "FP_DELHIVERYLIMITED_ADJUSTEDEBITDA_FY202324_569730fe4e28",
+    "subject": {
+      "entity_id": "ent_delhivery",
+      "canonical_name": "Delhivery Limited",
+      "aliases": [
+        "Delhivery"
+      ],
+      "entity_type": "ORGANIZATION"
+    },
+    "predicate": {
+      "metric_id": "met_adj_ebitda",
+      "name": "Adjusted EBITDA",
+      "category": "FINANCIAL",
+      "standard_definition": "Adjusted EBITDA"
+    },
+    "value": {
+      "raw_text": "\u20b91,266 Cr",
+      "normalized_value": 1266.0,
+      "unit": "inr_crore",
+      "scale_multiplier": 10000000.0,
+      "currency": "INR"
+    },
+    "temporal": {
+      "reference_period": "FY2023-24",
+      "period_start": "2023-04-01",
+      "period_end": "2024-03-31",
+      "publication_time": "2024-08-01T00:00:00Z",
+      "data_vintage": "FY24-AR",
+      "observation_type": "actual"
+    },
+    "scope_accounting": "CONSOLIDATED",
+    "provenance": {
+      "document_id": "02-delhivery-annual-report-fy24-excerpt.pdf",
+      "document_title": "Delhivery Annual Report FY 2023-24",
+      "document_hash": "hash_dlhv_ar24",
+      "page_number": 36,
+      "bounding_box": null,
+      "table_cell": "Financial Highlights Table, Row 3",
+      "raw_snippet": "Adjusted EBITDA for FY24: \u20b91,266 Cr (Parser B decimal omission)",
+      "parser_engine": "ocr_fallback_raw",
+      "parser_confidence": 0.95,
+      "evidence_id": null
+    },
+    "confidence_score": 1.0,
+    "independent_source_count": 1,
+    "citations": [],
+    "created_at": null
+  },
+  {
+    "fact_id": "gold_dlhv_statutory_ebitda_fy24",
+    "fingerprint": "FP_DELHIVERYLIMITED_STATUTORYEBITDA_FY202324_cb95da7d0c30",
+    "subject": {
+      "entity_id": "ent_delhivery",
+      "canonical_name": "Delhivery Limited",
+      "aliases": [
+        "Delhivery"
+      ],
+      "entity_type": "ORGANIZATION"
+    },
+    "predicate": {
+      "metric_id": "met_statutory_ebitda",
+      "name": "Statutory EBITDA",
+      "category": "FINANCIAL",
+      "standard_definition": "GAAP statutory EBITDA including non-cash ESOP charges"
+    },
+    "value": {
+      "raw_text": "-\u20b968.2 Cr",
+      "normalized_value": -68.2,
+      "unit": "inr_crore",
+      "scale_multiplier": 10000000.0,
+      "currency": "INR"
+    },
+    "temporal": {
+      "reference_period": "FY2023-24",
+      "period_start": "2023-04-01",
+      "period_end": "2024-03-31",
+      "publication_time": "2024-08-01T00:00:00Z",
+      "data_vintage": "FY24-AR",
+      "observation_type": "actual"
+    },
+    "scope_accounting": "CONSOLIDATED",
+    "provenance": {
+      "document_id": "02-delhivery-annual-report-fy24-excerpt.pdf",
+      "document_title": "Delhivery Annual Report FY 2023-24",
+      "document_hash": "hash_dlhv_ar24",
+      "page_number": 86,
+      "bounding_box": null,
+      "table_cell": "Consolidated Statement of Profit and Loss",
+      "raw_snippet": "Profit before tax and finance cost includes ESOP expense of \u20b9194.8 Cr.",
+      "parser_engine": "docling_v2",
+      "parser_confidence": 0.95,
+      "evidence_id": null
+    },
+    "confidence_score": 1.0,
+    "independent_source_count": 1,
+    "citations": [],
+    "created_at": null
+  },
+  {
+    "fact_id": "gold_india_gdp_survey_fy25",
+    "fingerprint": "FP_INDIA_REALGDPGROWTH_FY202425_cd1121dcd0ef",
+    "subject": {
+      "entity_id": "ent_india",
+      "canonical_name": "India",
+      "aliases": [
+        "Republic of India",
+        "Indian Economy"
+      ],
+      "entity_type": "ORGANIZATION"
+    },
+    "predicate": {
+      "metric_id": "met_real_gdp_growth",
+      "name": "Real GDP Growth",
+      "category": "FINANCIAL",
+      "standard_definition": "Year-on-year real constant price gross domestic product growth rate"
+    },
+    "value": {
+      "raw_text": "6.5%",
+      "normalized_value": 6.5,
+      "unit": "percentage",
+      "scale_multiplier": 1.0,
+      "currency": null
+    },
+    "temporal": {
+      "reference_period": "FY2024-25",
+      "period_start": "2024-04-01",
+      "period_end": "2025-03-31",
+      "publication_time": "2025-01-31T00:00:00Z",
+      "data_vintage": "EcoSurvey-2024-25",
+      "observation_type": "actual"
+    },
+    "scope_accounting": "NATIONAL",
+    "provenance": {
+      "document_id": "01-india-economic-survey-2024-25-excerpt.pdf",
+      "document_title": "India Economic Survey 2024-25",
+      "document_hash": "hash_survey_25",
+      "page_number": 46,
+      "bounding_box": null,
+      "table_cell": "Table 1.1",
+      "raw_snippet": "Real GDP is projected to grow between 6.5 to 7.0 percent in 2024-25 with conservative baseline at 6.5%.",
+      "parser_engine": "docling_v2",
+      "parser_confidence": 0.95,
+      "evidence_id": null
+    },
+    "confidence_score": 1.0,
+    "independent_source_count": 1,
+    "citations": [],
+    "created_at": null
+  },
+  {
+    "fact_id": "gold_india_gdp_imf_fy25",
+    "fingerprint": "FP_INDIA_REALGDPGROWTH_FY202425_c394811fc80e",
+    "subject": {
+      "entity_id": "ent_india",
+      "canonical_name": "India",
+      "aliases": [
+        "India",
+        "GoI"
+      ],
+      "entity_type": "ORGANIZATION"
+    },
+    "predicate": {
+      "metric_id": "met_real_gdp_growth",
+      "name": "Real GDP Growth",
+      "category": "FINANCIAL",
+      "standard_definition": "IMF staff estimates for real GDP growth"
+    },
+    "value": {
+      "raw_text": "7.0%",
+      "normalized_value": 7.0,
+      "unit": "percentage",
+      "scale_multiplier": 1.0,
+      "currency": null
+    },
+    "temporal": {
+      "reference_period": "FY2024-25",
+      "period_start": "2024-04-01",
+      "period_end": "2025-03-31",
+      "publication_time": "2024-11-25T00:00:00Z",
+      "data_vintage": "IMF-WEO-2024",
+      "observation_type": "projection"
+    },
+    "scope_accounting": "NATIONAL",
+    "provenance": {
+      "document_id": "03-imf-india-2025-article-iv-excerpt.pdf",
+      "document_title": "IMF India 2025 Article IV Consultation",
+      "document_hash": "hash_imf_25",
+      "page_number": 14,
+      "bounding_box": null,
+      "table_cell": "Table 1",
+      "raw_snippet": "Staff projects growth at 7.0 percent in FY2024/25 supported by buoyant domestic demand.",
+      "parser_engine": "docling_v2",
+      "parser_confidence": 0.95,
+      "evidence_id": null
+    },
+    "confidence_score": 1.0,
+    "independent_source_count": 1,
+    "citations": [
+      "01-india-economic-survey-2024-25-excerpt.pdf"
+    ],
+    "created_at": null
+  },
+  {
+    "fact_id": "gold_rbi_cpi_fy24",
+    "fingerprint": "FP_INDIA_HEADLINECPIINFLATION_FY202324_5c49544635c7",
+    "subject": {
+      "entity_id": "ent_india",
+      "canonical_name": "India",
+      "aliases": [
+        "Reserve Bank of India",
+        "RBI"
+      ],
+      "entity_type": "ORGANIZATION"
+    },
+    "predicate": {
+      "metric_id": "met_cpi_inflation",
+      "name": "Headline CPI Inflation",
+      "category": "FINANCIAL",
+      "standard_definition": "Consumer Price Index Combined All-India inflation rate"
+    },
+    "value": {
+      "raw_text": "5.4%",
+      "normalized_value": 5.4,
+      "unit": "percentage",
+      "scale_multiplier": 1.0,
+      "currency": null
+    },
+    "temporal": {
+      "reference_period": "FY2023-24",
+      "period_start": "2023-04-01",
+      "period_end": "2024-03-31",
+      "publication_time": "2024-05-30T00:00:00Z",
+      "data_vintage": "RBI-AR-2023-24",
+      "observation_type": "actual"
+    },
+    "scope_accounting": "NATIONAL",
+    "provenance": {
+      "document_id": "02-rbi-annual-report-2024-25-excerpt.pdf",
+      "document_title": "Reserve Bank of India Annual Report 2024-25",
+      "document_hash": "hash_rbi_25",
+      "page_number": 35,
+      "bounding_box": null,
+      "table_cell": "Box II.1",
+      "raw_snippet": "Headline CPI inflation moderated to 5.4 per cent during 2023-24 from 6.7 per cent in 2022-23.",
+      "parser_engine": "docling_v2",
+      "parser_confidence": 0.95,
+      "evidence_id": null
+    },
+    "confidence_score": 1.0,
+    "independent_source_count": 1,
+    "citations": [],
+    "created_at": null
+  },
+  {
+    "fact_id": "gold_survey_cpi_fy24",
+    "fingerprint": "FP_INDIA_HEADLINECPIINFLATION_FY202324_5c49544635c7",
+    "subject": {
+      "entity_id": "ent_india",
+      "canonical_name": "India",
+      "aliases": [
+        "Government of India",
+        "MoSPI"
+      ],
+      "entity_type": "ORGANIZATION"
+    },
+    "predicate": {
+      "metric_id": "met_cpi_inflation",
+      "name": "Headline CPI Inflation",
+      "category": "FINANCIAL",
+      "standard_definition": "Consumer Price Index Combined All-India inflation rate"
+    },
+    "value": {
+      "raw_text": "5.4%",
+      "normalized_value": 5.4,
+      "unit": "percentage",
+      "scale_multiplier": 1.0,
+      "currency": null
+    },
+    "temporal": {
+      "reference_period": "FY2023-24",
+      "period_start": "2023-04-01",
+      "period_end": "2024-03-31",
+      "publication_time": "2025-01-31T00:00:00Z",
+      "data_vintage": "EcoSurvey-2024-25",
+      "observation_type": "actual"
+    },
+    "scope_accounting": "NATIONAL",
+    "provenance": {
+      "document_id": "01-india-economic-survey-2024-25-excerpt.pdf",
+      "document_title": "India Economic Survey 2024-25",
+      "document_hash": "hash_survey_25",
+      "page_number": 28,
+      "bounding_box": null,
+      "table_cell": "Section 2.2 / Headline CPI Inflation",
+      "raw_snippet": "CPI-Combined inflation stood at 5.4 percent in FY24.",
+      "parser_engine": "docling_v2",
+      "parser_confidence": 0.95,
+      "evidence_id": null
+    },
+    "confidence_score": 1.0,
+    "independent_source_count": 1,
+    "citations": [
+      "02-rbi-annual-report-2024-25-excerpt.pdf"
+    ],
+    "created_at": null
+  }
+]

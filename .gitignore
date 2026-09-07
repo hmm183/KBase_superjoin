@@ -70,6 +70,7 @@ data/page_previews/*
 !data/page_previews/.gitkeep
 data/gold/*
 !data/gold/.gitkeep
+!data/gold/*.json
 
 # Local SQLite / Databases / Logs
 *.sqlite

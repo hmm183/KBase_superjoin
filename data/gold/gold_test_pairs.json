@@ -1,0 +1,122 @@
+[
+  {
+    "instance_id": "gold_test_pair_0",
+    "fact_a_id": "gold_dlhv_adj_ebitda_ar_fy24",
+    "fact_b_id": "gold_dlhv_adj_ebitda_pres_fy24",
+    "features": {
+      "entity_similarity": 1.0,
+      "entity_embedding_cosine": 1.0,
+      "metric_similarity": 1.0,
+      "metric_definition_cosine": 0.4034,
+      "numeric_relative_diff": 0.0,
+      "numeric_log_ratio": 0.0,
+      "unit_compatibility": 1.0,
+      "temporal_period_overlap_iou": 1.0,
+      "temporal_vintage_delta_days": 1.0,
+      "forecast_status_match": 1.0,
+      "scope_overlap_score": 1.0,
+      "source_independence_score": 1.0
+    },
+    "label": "CORROBORATES",
+    "source_type": "gold_human",
+    "metadata": {
+      "evaluator_note": "Same company, metric, FY24 period, both 126.6 Cr"
+    }
+  },
+  {
+    "instance_id": "gold_test_pair_1",
+    "fact_a_id": "gold_dlhv_adj_ebitda_ar_fy24",
+    "fact_b_id": "gold_dlhv_ebitda_parser_conflict",
+    "features": {
+      "entity_similarity": 1.0,
+      "entity_embedding_cosine": 1.0,
+      "metric_similarity": 1.0,
+      "metric_definition_cosine": 0.1957,
+      "numeric_relative_diff": 0.9,
+      "numeric_log_ratio": 1.0,
+      "unit_compatibility": 1.0,
+      "temporal_period_overlap_iou": 1.0,
+      "temporal_vintage_delta_days": 0.0,
+      "forecast_status_match": 1.0,
+      "scope_overlap_score": 1.0,
+      "source_independence_score": 0.0
+    },
+    "label": "GENUINE_CONTRADICTION",
+    "source_type": "gold_human",
+    "metadata": {
+      "evaluator_note": "126.6 Cr vs 1266 Cr direct numerical clash (OCR error)"
+    }
+  },
+  {
+    "instance_id": "gold_test_pair_2",
+    "fact_a_id": "gold_dlhv_adj_ebitda_ar_fy24",
+    "fact_b_id": "gold_dlhv_statutory_ebitda_fy24",
+    "features": {
+      "entity_similarity": 1.0,
+      "entity_embedding_cosine": 1.0,
+      "metric_similarity": 0.6452,
+      "metric_definition_cosine": 0.3385,
+      "numeric_relative_diff": 1.5387,
+      "numeric_log_ratio": 0.0,
+      "unit_compatibility": 1.0,
+      "temporal_period_overlap_iou": 1.0,
+      "temporal_vintage_delta_days": 0.0,
+      "forecast_status_match": 1.0,
+      "scope_overlap_score": 1.0,
+      "source_independence_score": 0.0
+    },
+    "label": "DEFINITION_MISMATCH",
+    "source_type": "gold_human",
+    "metadata": {
+      "evaluator_note": "Adjusted EBITDA (126.6 Cr) vs Statutory EBITDA (-68.2 Cr)"
+    }
+  },
+  {
+    "instance_id": "gold_test_pair_3",
+    "fact_a_id": "gold_india_gdp_survey_fy25",
+    "fact_b_id": "gold_india_gdp_imf_fy25",
+    "features": {
+      "entity_similarity": 1.0,
+      "entity_embedding_cosine": 1.0,
+      "metric_similarity": 1.0,
+      "metric_definition_cosine": 0.4906,
+      "numeric_relative_diff": 0.0714,
+      "numeric_log_ratio": 0.0322,
+      "unit_compatibility": 1.0,
+      "temporal_period_overlap_iou": 1.0,
+      "temporal_vintage_delta_days": 1.0,
+      "forecast_status_match": 0.0,
+      "scope_overlap_score": 1.0,
+      "source_independence_score": 0.1
+    },
+    "label": "FORECAST_ACTUAL_MISMATCH",
+    "source_type": "gold_human",
+    "metadata": {
+      "evaluator_note": "IMF 7.0% projection vs Economic Survey 6.5% actual estimate"
+    }
+  },
+  {
+    "instance_id": "gold_test_pair_4",
+    "fact_a_id": "gold_rbi_cpi_fy24",
+    "fact_b_id": "gold_survey_cpi_fy24",
+    "features": {
+      "entity_similarity": 1.0,
+      "entity_embedding_cosine": 1.0,
+      "metric_similarity": 1.0,
+      "metric_definition_cosine": 1.0,
+      "numeric_relative_diff": 0.0,
+      "numeric_log_ratio": 0.0,
+      "unit_compatibility": 1.0,
+      "temporal_period_overlap_iou": 1.0,
+      "temporal_vintage_delta_days": 1.0,
+      "forecast_status_match": 1.0,
+      "scope_overlap_score": 1.0,
+      "source_independence_score": 0.1
+    },
+    "label": "CORROBORATES",
+    "source_type": "gold_human",
+    "metadata": {
+      "evaluator_note": "RBI and Economic Survey both report 5.4% CPI inflation"
+    }
+  }
+]

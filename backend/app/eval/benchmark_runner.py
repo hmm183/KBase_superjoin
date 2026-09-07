@@ -83,3 +83,24 @@ class BenchmarkRunner:
             json.dump(benchmark_results, f, indent=2)
 
         return benchmark_results
+
+if __name__ == "__main__":
+    print("\n" + "=" * 60)
+    print(" Evidence Galaxy: Offline Evaluation & Benchmark Suite")
+    print(" (Zero-Network Test against Curated Gold Set)")
+    print("=" * 60)
+    res = BenchmarkRunner.run_full_benchmark()
+    print(f" Model Version:                  {res['model_version']}")
+    print(f" Overall Pair Classification Acc: {res['overall_accuracy'] * 100:.1f}%")
+    print(f" Macro F1 Score:                 {res['macro_f1']:.3f}")
+    print(f" Weighted F1 Score:              {res['weighted_f1']:.3f}")
+    print(f" Entity Resolution F1:           {res['entity_resolution_f1']:.3f}")
+    print(f" Fact Matching F1:               {res['fact_matching_f1']:.3f}")
+    print(f" Scale Normalization Accuracy:   {res['numeric_normalization_accuracy'] * 100:.1f}%")
+    print("-" * 60)
+    print(" Per-Class Performance:")
+    for cls_name, f1 in res.get("per_class_f1", {}).items():
+        print(f"   * {cls_name:<30} F1: {f1:.3f}")
+    print("=" * 60)
+    print(f" Detailed JSON report saved to: data/eval_reports/benchmark_report_{res['model_version']}.json\n")
+
