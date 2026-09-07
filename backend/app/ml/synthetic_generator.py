@@ -147,6 +147,17 @@ class SyntheticGenerator:
                 f"{fact_a.subject.canonical_name} achieved {fact_a.value.normalized_value} in {fact_a.predicate.name}"
             ]
             fact_b.provenance.raw_snippet = random.choice(phrasings)
+            defs = [
+                fact_a.predicate.standard_definition,
+                f"Standard reported measurement of {fact_a.predicate.name}",
+                f"Consolidated audited figure for {fact_a.predicate.name}",
+                f"Management metric measuring {fact_a.predicate.name}"
+            ]
+            fact_b.predicate.standard_definition = random.choice(defs)
+            # Differing vintages (e.g. Earnings Presentation vs Annual Report) that confirm same figure
+            if random.random() < 0.6:
+                fact_a.temporal.data_vintage = "2024-Q4-Pres"
+                fact_b.temporal.data_vintage = "2024-AR"
 
         elif target_class == ContradictionClass.UNIT_MISMATCH:
             # e.g. 126.6 Crore vs 1,266 Million or 10x multiplier parsing error
@@ -170,28 +181,35 @@ class SyntheticGenerator:
             fact_b.value.normalized_value = round(fact_a.value.normalized_value + random.choice([-0.5, 0.5, -0.8]), 2)
 
         elif target_class == ContradictionClass.SCOPE_MISMATCH:
-            # Consolidated vs Standalone
+            # Consolidated vs Standalone or sub-index vs composite
             fact_a.scope_accounting = "CONSOLIDATED"
             fact_b.scope_accounting = "STANDALONE"
             fact_b.value.normalized_value = round(fact_a.value.normalized_value * 0.82, 2)
 
         elif target_class == ContradictionClass.REVISION:
-            # Later vintage revision
+            # Later vintage revision requires BOTH differing vintage AND changed value!
             fact_a.temporal.data_vintage = "2024-Q1-Prelim"
             fact_b.temporal.data_vintage = "2024-Q4-Revised"
-            fact_b.value.normalized_value = round(fact_a.value.normalized_value + 0.3, 2)
+            fact_b.value.normalized_value = round(fact_a.value.normalized_value * random.choice([1.04, 0.96, 1.08, 0.92]), 2)
 
         elif target_class == ContradictionClass.DEFINITION_MISMATCH:
-            # Statutory EBITDA vs Adjusted EBITDA
-            fact_b.predicate.name = f"Statutory {fact_a.predicate.name}"
-            fact_b.predicate.standard_definition = "Includes exceptional items and share-based compensation expenses"
-            fact_b.value.normalized_value = round(fact_a.value.normalized_value - 40.0, 2)
+            # Statutory EBITDA vs Adjusted EBITDA vs Service EBITDA
+            prefixes = ["Statutory", "Service", "Operational", "Reported", "GAAP"]
+            p = random.choice(prefixes)
+            fact_b.predicate.name = f"{p} {fact_a.predicate.name}"
+            fact_b.predicate.standard_definition = f"Differs from operating metric by including/excluding exceptional items for {p} reporting"
+            fact_b.value.normalized_value = round(fact_a.value.normalized_value * random.choice([0.65, 0.45, 1.35]), 2)
 
         elif target_class == ContradictionClass.GENUINE_CONTRADICTION:
-            # Same entity, metric, period, unit, scope, vintage - but irreconcilable difference (e.g. 126.6 vs 1266)
-            mult = random.choice([0.4, 2.5, 10.0])
+            # Same entity, metric, period, unit, scope - but irreconcilable divergence (e.g. 4.0% vs 2.8%, or 126.6 vs 1266)
+            fact_b.predicate.name = fact_a.predicate.name
+            fact_b.predicate.standard_definition = fact_a.predicate.standard_definition
+            mult = random.choice([0.7, 0.4, 1.4, 2.5, 10.0])
             fact_b.value.normalized_value = round(fact_a.value.normalized_value * mult, 2)
             fact_b.value.raw_text = f"{fact_b.value.normalized_value} {fact_b.value.unit.value}"
+            if random.random() < 0.5:
+                fact_a.temporal.data_vintage = "Source1-2024"
+                fact_b.temporal.data_vintage = "Source2-2024"
 
         elif target_class == ContradictionClass.LIKELY_CONTRADICTION:
             # Strong divergence (+35%) without clear scope or definition difference

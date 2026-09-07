@@ -32,7 +32,7 @@ class FactRelationshipClassifier:
         self.idx_to_class: Dict[int, str] = {i: c for i, c in enumerate(self.classes)}
         self.feature_names = PairwiseFeatureVector.feature_names()
         self.is_trained: bool = False
-        self.version: str = "v1.0"
+        self.version: str = "v1.1"
         self._load_if_exists()
 
     def _load_if_exists(self):
@@ -49,24 +49,20 @@ class FactRelationshipClassifier:
 
     def train(
         self,
-        synthetic_samples_per_class: int = 200,
-        include_gold: bool = True
+        synthetic_samples_per_class: int = 250,
+        include_gold: bool = False
     ) -> EvaluationMetrics:
         """
-        Trains LightGBM model on synthetic weak supervision + gold instances.
-        Evaluates strictly on the hand-adjudicated gold test set.
+        Trains LightGBM model strictly on synthetic weak supervision.
+        Evaluates on the 100% held-out hand-adjudicated gold test set (zero data leakage).
         """
         os.makedirs(self.MODEL_DIR, exist_ok=True)
         
-        # 1. Generate Synthetic Training Data
+        # 1. Generate Synthetic Training Data (weak supervision)
         train_instances = SyntheticGenerator.generate_synthetic_dataset(samples_per_class=synthetic_samples_per_class)
         
-        # 2. Get Gold Data (for evaluation and training)
+        # Gold test set is strictly held out for evaluation (never seen during training)
         gold_pairs = GoldCurator.get_gold_test_pairs()
-        if include_gold:
-            # Replicate gold pairs to give them sufficient representation alongside synthetic
-            for _ in range(15):
-                train_instances.extend(gold_pairs)
         
         # Extract X, y for training
         X_train = [inst.features.to_list() for inst in train_instances]

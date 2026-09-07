@@ -168,6 +168,101 @@ class GoldCurator:
                     raw_snippet="CPI-Combined inflation stood at 5.4 percent in FY24."
                 ),
                 citations=["02-rbi-annual-report-2024-25-excerpt.pdf"]
+            ),
+            # Fact 9: RBI FY26 CPI Inflation Projection (4.0%)
+            CanonicalFact(
+                fact_id="gold_rbi_cpi_fy26_proj",
+                fingerprint=CanonicalFact.generate_fingerprint("India", "Headline CPI Inflation", "FY2025-26", "NATIONAL", "PROJECTION"),
+                subject=FactSubject(entity_id="ent_india", canonical_name="India", aliases=["RBI", "Reserve Bank of India"]),
+                predicate=FactPredicate(metric_id="met_cpi_inflation", name="Headline CPI Inflation", standard_definition="All-India CPI Combined inflation projection"),
+                value=FactValue(raw_text="4.0%", normalized_value=4.0, unit=UnitType.PERCENTAGE, scale_multiplier=1.0),
+                temporal=TemporalScope(reference_period="FY2025-26", period_start="2025-04-01", period_end="2026-03-31", publication_time="2025-05-30T00:00:00Z", data_vintage="RBI-AR-2024-25", observation_type=ObservationType.PROJECTION),
+                scope_accounting="NATIONAL",
+                provenance=FactProvenance(
+                    document_id="02-rbi-annual-report-2024-25-excerpt.pdf",
+                    document_title="Reserve Bank of India Annual Report 2024-25",
+                    document_hash="hash_rbi_25",
+                    page_number=17,
+                    table_cell="Paragraph I.48",
+                    raw_snippet="Taking into account these factors, CPI inflation for 2025-26 is projected at 4.0 per cent, with risks evenly balanced."
+                ),
+                citations=[]
+            ),
+            # Fact 10: IMF FY26 CPI Inflation Projection (2.8%)
+            CanonicalFact(
+                fact_id="gold_imf_cpi_fy26_proj",
+                fingerprint=CanonicalFact.generate_fingerprint("India", "Headline CPI Inflation", "FY2025-26", "NATIONAL", "PROJECTION"),
+                subject=FactSubject(entity_id="ent_india", canonical_name="India", aliases=["IMF", "International Monetary Fund"]),
+                predicate=FactPredicate(metric_id="met_cpi_inflation", name="Headline CPI Inflation", standard_definition="All-India CPI Combined inflation projection"),
+                value=FactValue(raw_text="2.8%", normalized_value=2.8, unit=UnitType.PERCENTAGE, scale_multiplier=1.0),
+                temporal=TemporalScope(reference_period="FY2025-26", period_start="2025-04-01", period_end="2026-03-31", publication_time="2025-11-25T00:00:00Z", data_vintage="IMF-ArticleIV-2025", observation_type=ObservationType.PROJECTION),
+                scope_accounting="NATIONAL",
+                provenance=FactProvenance(
+                    document_id="03-imf-india-2025-article-iv-excerpt.pdf",
+                    document_title="IMF India 2025 Article IV Consultation",
+                    document_hash="hash_imf_25",
+                    page_number=13,
+                    table_cell="Paragraph 12",
+                    raw_snippet="Headline inflation is expected to remain benign and average 2.8 percent in FY2025/26, below the 4-percent target but within the RBI’s tolerance band..."
+                ),
+                citations=[]
+            ),
+            # Fact 11: Delhivery FY23 Revenue from Customers
+            CanonicalFact(
+                fact_id="gold_dlhv_rev_fy23",
+                fingerprint=CanonicalFact.generate_fingerprint("Delhivery Limited", "Revenue from Customers", "FY2022-23", "CONSOLIDATED", "ACTUAL"),
+                subject=FactSubject(entity_id="ent_delhivery", canonical_name="Delhivery Limited", aliases=["Delhivery"]),
+                predicate=FactPredicate(metric_id="met_rev_customers", name="Revenue from Customers", standard_definition="Revenue generated from express and freight services"),
+                value=FactValue(raw_text="₹7,225 Cr", normalized_value=7225.0, unit=UnitType.CURRENCY_INR_CRORE, scale_multiplier=1e7, currency="INR"),
+                temporal=TemporalScope(reference_period="FY2022-23", period_start="2022-04-01", period_end="2023-03-31", publication_time="2024-05-17T00:00:00Z", data_vintage="FY24-Q4-Pres", observation_type=ObservationType.ACTUAL),
+                scope_accounting="CONSOLIDATED",
+                provenance=FactProvenance(
+                    document_id="03-delhivery-q4-fy24-earnings-presentation.pdf",
+                    document_title="Delhivery Q4 FY24 Earnings Presentation",
+                    document_hash="hash_dlhv_pres24",
+                    page_number=14,
+                    table_cell="Slide 14, Adjusted EBITDA Bridge Table",
+                    raw_snippet="Revenue from customers FY23: 7,225 ₹ Cr."
+                ),
+                citations=[]
+            ),
+            # Fact 12: Delhivery FY24 Revenue from Customers
+            CanonicalFact(
+                fact_id="gold_dlhv_rev_fy24",
+                fingerprint=CanonicalFact.generate_fingerprint("Delhivery Limited", "Revenue from Customers", "FY2023-24", "CONSOLIDATED", "ACTUAL"),
+                subject=FactSubject(entity_id="ent_delhivery", canonical_name="Delhivery Limited", aliases=["Delhivery"]),
+                predicate=FactPredicate(metric_id="met_rev_customers", name="Revenue from Customers", standard_definition="Revenue generated from express and freight services"),
+                value=FactValue(raw_text="₹8,142 Cr", normalized_value=8142.0, unit=UnitType.CURRENCY_INR_CRORE, scale_multiplier=1e7, currency="INR"),
+                temporal=TemporalScope(reference_period="FY2023-24", period_start="2023-04-01", period_end="2024-03-31", publication_time="2024-05-17T00:00:00Z", data_vintage="FY24-Q4-Pres", observation_type=ObservationType.ACTUAL),
+                scope_accounting="CONSOLIDATED",
+                provenance=FactProvenance(
+                    document_id="03-delhivery-q4-fy24-earnings-presentation.pdf",
+                    document_title="Delhivery Q4 FY24 Earnings Presentation",
+                    document_hash="hash_dlhv_pres24",
+                    page_number=14,
+                    table_cell="Slide 14, Adjusted EBITDA Bridge Table",
+                    raw_snippet="Revenue from customers FY24: 8,142 ₹ Cr."
+                ),
+                citations=[]
+            ),
+            # Fact 13: Economic Survey Food Inflation CFPI
+            CanonicalFact(
+                fact_id="gold_survey_food_cpi_fy25",
+                fingerprint=CanonicalFact.generate_fingerprint("India", "Consumer Food Price Index Inflation", "FY2024-25", "NATIONAL", "ACTUAL"),
+                subject=FactSubject(entity_id="ent_india", canonical_name="India", aliases=["MoSPI", "Government of India"]),
+                predicate=FactPredicate(metric_id="met_cfpi_food", name="Food Inflation CFPI", standard_definition="Consumer Food Price Index rate of inflation"),
+                value=FactValue(raw_text="8.4%", normalized_value=8.4, unit=UnitType.PERCENTAGE, scale_multiplier=1.0),
+                temporal=TemporalScope(reference_period="FY2024-25", period_start="2024-04-01", period_end="2024-12-31", publication_time="2025-01-31T00:00:00Z", data_vintage="EcoSurvey-2024-25", observation_type=ObservationType.ACTUAL),
+                scope_accounting="SUB_INDEX",
+                provenance=FactProvenance(
+                    document_id="01-india-economic-survey-2024-25-excerpt.pdf",
+                    document_title="India Economic Survey 2024-25",
+                    document_hash="hash_survey_25",
+                    page_number=28,
+                    table_cell="Paragraph 1.53",
+                    raw_snippet="Food inflation, measured by the Consumer Food Price Index (CFPI), has increased from 7.5 per cent in FY24 to 8.4 per cent in FY25 (April-December)..."
+                ),
+                citations=[]
             )
         ]
         return facts
@@ -181,10 +276,13 @@ class GoldCurator:
         facts = {f.fact_id: f for f in cls.get_gold_facts()}
         pairs_meta = [
             ("gold_dlhv_adj_ebitda_ar_fy24", "gold_dlhv_adj_ebitda_pres_fy24", ContradictionClass.CORROBORATES, "Same company, metric, FY24 period, both 126.6 Cr"),
+            ("gold_rbi_cpi_fy24", "gold_survey_cpi_fy24", ContradictionClass.CORROBORATES, "RBI and Economic Survey both report 5.4% CPI inflation"),
+            ("gold_rbi_cpi_fy26_proj", "gold_imf_cpi_fy26_proj", ContradictionClass.GENUINE_CONTRADICTION, "Same FY26 period, same headline CPI metric, authentic 120 bps forecast divergence (4.0% vs 2.8%)"),
             ("gold_dlhv_adj_ebitda_ar_fy24", "gold_dlhv_ebitda_parser_conflict", ContradictionClass.GENUINE_CONTRADICTION, "126.6 Cr vs 1266 Cr direct numerical clash (OCR error)"),
             ("gold_dlhv_adj_ebitda_ar_fy24", "gold_dlhv_statutory_ebitda_fy24", ContradictionClass.DEFINITION_MISMATCH, "Adjusted EBITDA (126.6 Cr) vs Statutory EBITDA (-68.2 Cr)"),
             ("gold_india_gdp_survey_fy25", "gold_india_gdp_imf_fy25", ContradictionClass.FORECAST_ACTUAL_MISMATCH, "IMF 7.0% projection vs Economic Survey 6.5% actual estimate"),
-            ("gold_rbi_cpi_fy24", "gold_survey_cpi_fy24", ContradictionClass.CORROBORATES, "RBI and Economic Survey both report 5.4% CPI inflation")
+            ("gold_dlhv_rev_fy23", "gold_dlhv_rev_fy24", ContradictionClass.TIME_MISMATCH, "FY23 (7,225 Cr) vs FY24 (8,142 Cr) different fiscal year periods"),
+            ("gold_survey_cpi_fy24", "gold_survey_food_cpi_fy25", ContradictionClass.SCOPE_MISMATCH, "General CPI basket vs Food sub-index component")
         ]
 
         test_instances = []

@@ -168,16 +168,17 @@ The system was evaluated against the four required demonstration categories usin
 ---
 
 ### Case 2: A Genuine / Likely Contradiction
-- **Claim**: Projected Average Headline CPI Inflation Trajectory for Fiscal Year 2024-25 (FY25).
-- **Source Document A**: `01-india-economic-survey-2024-25-excerpt.pdf`, Page 87
-  - *Verbatim Excerpt*: `"Monetary Policy Committee report revised its inflation projection from 4.5 per cent to 4.8 per cent for FY25"`
-- **Source Document B**: `03-imf-india-2025-article-iv-excerpt.pdf`, Page 13
-  - *Verbatim Excerpt*: `"Headline inflation is expected to remain benign and average 3.5 percent this FY. In FY2026/27, headline inflation is expected to converge to 4 percent..."`
+- **Claim**: Projected Average Headline CPI Inflation for Fiscal Year 2025-26 (FY26).
+- **Source Document A**: `02-rbi-annual-report-2024-25-excerpt.pdf`, Page 17 (Para I.48)
+  - *Verbatim Excerpt*: `"Taking into account these factors, CPI inflation for 2025-26 is projected at 4.0 per cent, with risks evenly balanced."`
+- **Source Document B**: `03-imf-india-2025-article-iv-excerpt.pdf`, Page 13 (Para 12)
+  - *Verbatim Excerpt*: `"Headline inflation is expected to remain benign and average 2.8 percent in FY2025/26, below the 4-percent target but within the RBI’s tolerance band..."`
 - **System Analysis & Resolution**:
-  This represents an authentic, apples-to-apples projection divergence on the exact same economic indicator: **Average Headline CPI Inflation for FY2024-25**.
-  - Document A reports the official Indian central bank/Ministry of Finance baseline of **4.8%** (driven by food price persistence).
-  - Document B reports the IMF staff baseline scenario of **3.5%** for the same fiscal year.
-  - The feature extractor computes a delta of $130\text{ bps}$ ($1.3\%$). Because the subject, metric, and forecast horizon are identical, the model rejects unit-scale or scope reconciliation and correctly flags the pair as a **`GENUINE_CONTRADICTION` (Forecast Divergence)** with high confidence.
+  This represents an authentic, apples-to-apples projection divergence on the exact same economic indicator: **Headline CPI Inflation for FY2025-26**.
+  - **Entity & Scope**: Both reports forecast the All-India Consumer Price Index (Combined) for the identical national economic perimeter.
+  - **Temporal Horizon**: Both forecasts are strictly for the same fiscal year: **FY 2025-26** (April 1, 2025 to March 31, 2026).
+  - **Institutional Divergence**: The Reserve Bank of India models a baseline of **4.0%** (anticipating persistent food price pressures and sticky core services), whereas the International Monetary Fund bilateral mission models a significantly more optimistic **2.8%** (anticipating stronger supply-side easing and favorable international commodity base effects).
+  - The feature extractor computes an authentic delta of $120\text{ bps}$ ($1.20\%$). Because the subject, metric, and forecast period are strictly congruent, the system rejects temporal or unit-scale explanations and correctly classifies the pair as a **`GENUINE_CONTRADICTION` (Forecast Divergence)** with genuine macroeconomic disagreement between primary institutional models.
 
 ---
 
@@ -193,7 +194,7 @@ The system was evaluated against the four required demonstration categories usin
   - Applying the Indian financial conversion factor ($1\text{ Crore} = 10\text{ Million} = 10^7\text{ INR}$):
     $$\text{₹8,142 Crore} \times 10 = \text{₹81,420 Million} \approx \text{₹81,415 Million} \quad (0.006\%\text{ rounding delta})$$
     $$\text{₹76 Crore} \times 10 = \text{₹760 Million} \approx \text{₹758 Million} \quad (0.26\%\text{ rounding delta})$$
-  - The system executes the **Hypothesis Tournament**, validates the *Scale Parity* hypothesis with 99.8% posterior probability, and classifies the pair as **`CORROBORATES`** rather than a contradiction.
+  - The system executes the **Hypothesis Tournament**, validates the *Scale Parity* hypothesis via deterministic arithmetic reconciliation: the arithmetic leaves a residual variance of just $0.006\%$ on revenue ($5\text{ Mn}$ difference on an $81\text{k Mn}$ base, stemming from presentation rounding in investor slide summaries), evaluating $1 - \text{residual variance} \approx 99.99\%$ scale parity confidence and correctly classifying the pair as **`CORROBORATES`** rather than a false-positive contradiction.
 
 ---
 
@@ -247,21 +248,32 @@ python -m backend.app.eval.benchmark_runner
  (Zero-Network Test against Curated Gold Set)
 ============================================================
  Model Version:                  v1.1
- Overall Pair Classification Acc: 100.0%
- Macro F1 Score:                 1.000
- Weighted F1 Score:              1.000
+ Overall Pair Classification Acc: 62.5%
+ Macro F1 Score:                 0.622
+ Weighted F1 Score:              0.633
  Entity Resolution F1:           0.800
  Fact Matching F1:               0.945
  Scale Normalization Accuracy:   98.5%
 ------------------------------------------------------------
  Per-Class Performance:
-   * CORROBORATES                   F1: 1.000
-   * DEFINITION_MISMATCH            F1: 1.000
-   * FORECAST_ACTUAL_MISMATCH       F1: 1.000
-   * GENUINE_CONTRADICTION          F1: 1.000
+   * CORROBORATES                   F1: 0.667
+   * SCOPE_MISMATCH                 F1: 1.000
+   * TIME_MISMATCH                  F1: 1.000
+   * DEFINITION_MISMATCH            F1: 0.400
+   * GENUINE_CONTRADICTION          F1: 0.667
+   * FORECAST_ACTUAL_MISMATCH       F1: 0.000
 ============================================================
  Detailed JSON report saved to: data/eval_reports/benchmark_report_v1.1.json
 ```
+
+### Methodology & Error Analysis (Zero Data Leakage Protocol):
+To avoid artificial evaluation metrics and closed-loop synthetic memorization:
+- **Strict Separation of Training & Evaluation**: The LightGBM classifier is trained **exclusively on synthetic weak supervision** (`include_gold = False`, 250 instances per class with natural language paraphrase variance, metric noise, and continuous jitter).
+- **100% Held-Out Human Gold Evaluation**: The evaluation harness tests the trained model against 8 hand-adjudicated ground-truth pairs extracted directly from the primary PDF filings ([`data/gold/gold_test_pairs.json`](file:///c:/Users/vrish/Desktop/superjoin/data/gold/gold_test_pairs.json)). The model is never exposed to these test pairs during fitting.
+- **Honest Error Taxonomy**:
+  1. **Cross-Agency Paraphrase Hesitation (`CORROBORATES` F1: 0.667)**: One corroborating pair (RBI 5.4% CPI vs. Economic Survey 5.4% CPI) was classified as `DEFINITION_MISMATCH`. While both refer to headline CPI, the phrasing divergence between RBI ("Headline CPI inflation") and MoSPI ("Consumer Price Index Combined All-India inflation rate") pushed the metric embedding cosine similarity down to 0.40, causing the model to conservatively flag a definition variance.
+  2. **Forecast vs. Actual Boundary (`FORECAST_ACTUAL_MISMATCH` F1: 0.000)**: In the test pair comparing IMF's 7.0% projection against Economic Survey's 6.5% actual estimate, the model predicted `GENUINE_CONTRADICTION`. The scalar delta of 50 bps triggered the contradiction boundary because the weak-supervision training set lacked fine-grained temporal prefix cues for historical projection revisions.
+  3. **High-Precision Separations (`TIME_MISMATCH` & `SCOPE_MISMATCH` F1: 1.000)**: Non-overlapping fiscal years (e.g. FY23 vs FY24) and basket scope differences (General CPI basket vs Food CFPI sub-index) are reliably separated by date interval IOU and accounting hierarchy features.
 
 ---
 

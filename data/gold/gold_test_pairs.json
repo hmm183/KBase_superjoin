@@ -25,6 +25,54 @@
   },
   {
     "instance_id": "gold_test_pair_1",
+    "fact_a_id": "gold_rbi_cpi_fy24",
+    "fact_b_id": "gold_survey_cpi_fy24",
+    "features": {
+      "entity_similarity": 1.0,
+      "entity_embedding_cosine": 1.0,
+      "metric_similarity": 1.0,
+      "metric_definition_cosine": 1.0,
+      "numeric_relative_diff": 0.0,
+      "numeric_log_ratio": 0.0,
+      "unit_compatibility": 1.0,
+      "temporal_period_overlap_iou": 1.0,
+      "temporal_vintage_delta_days": 1.0,
+      "forecast_status_match": 1.0,
+      "scope_overlap_score": 1.0,
+      "source_independence_score": 0.1
+    },
+    "label": "CORROBORATES",
+    "source_type": "gold_human",
+    "metadata": {
+      "evaluator_note": "RBI and Economic Survey both report 5.4% CPI inflation"
+    }
+  },
+  {
+    "instance_id": "gold_test_pair_2",
+    "fact_a_id": "gold_rbi_cpi_fy26_proj",
+    "fact_b_id": "gold_imf_cpi_fy26_proj",
+    "features": {
+      "entity_similarity": 1.0,
+      "entity_embedding_cosine": 1.0,
+      "metric_similarity": 1.0,
+      "metric_definition_cosine": 1.0,
+      "numeric_relative_diff": 0.3,
+      "numeric_log_ratio": 0.1549,
+      "unit_compatibility": 1.0,
+      "temporal_period_overlap_iou": 1.0,
+      "temporal_vintage_delta_days": 1.0,
+      "forecast_status_match": 1.0,
+      "scope_overlap_score": 1.0,
+      "source_independence_score": 1.0
+    },
+    "label": "GENUINE_CONTRADICTION",
+    "source_type": "gold_human",
+    "metadata": {
+      "evaluator_note": "Same FY26 period, same headline CPI metric, authentic 120 bps forecast divergence (4.0% vs 2.8%)"
+    }
+  },
+  {
+    "instance_id": "gold_test_pair_3",
     "fact_a_id": "gold_dlhv_adj_ebitda_ar_fy24",
     "fact_b_id": "gold_dlhv_ebitda_parser_conflict",
     "features": {
@@ -48,7 +96,7 @@
     }
   },
   {
-    "instance_id": "gold_test_pair_2",
+    "instance_id": "gold_test_pair_4",
     "fact_a_id": "gold_dlhv_adj_ebitda_ar_fy24",
     "fact_b_id": "gold_dlhv_statutory_ebitda_fy24",
     "features": {
@@ -72,7 +120,7 @@
     }
   },
   {
-    "instance_id": "gold_test_pair_3",
+    "instance_id": "gold_test_pair_5",
     "fact_a_id": "gold_india_gdp_survey_fy25",
     "fact_b_id": "gold_india_gdp_imf_fy25",
     "features": {
@@ -96,27 +144,51 @@
     }
   },
   {
-    "instance_id": "gold_test_pair_4",
-    "fact_a_id": "gold_rbi_cpi_fy24",
-    "fact_b_id": "gold_survey_cpi_fy24",
+    "instance_id": "gold_test_pair_6",
+    "fact_a_id": "gold_dlhv_rev_fy23",
+    "fact_b_id": "gold_dlhv_rev_fy24",
     "features": {
       "entity_similarity": 1.0,
       "entity_embedding_cosine": 1.0,
       "metric_similarity": 1.0,
       "metric_definition_cosine": 1.0,
-      "numeric_relative_diff": 0.0,
-      "numeric_log_ratio": 0.0,
+      "numeric_relative_diff": 0.1126,
+      "numeric_log_ratio": 0.0519,
       "unit_compatibility": 1.0,
-      "temporal_period_overlap_iou": 1.0,
-      "temporal_vintage_delta_days": 1.0,
+      "temporal_period_overlap_iou": 0.0,
+      "temporal_vintage_delta_days": 0.0,
       "forecast_status_match": 1.0,
       "scope_overlap_score": 1.0,
-      "source_independence_score": 0.1
+      "source_independence_score": 0.0
     },
-    "label": "CORROBORATES",
+    "label": "TIME_MISMATCH",
     "source_type": "gold_human",
     "metadata": {
-      "evaluator_note": "RBI and Economic Survey both report 5.4% CPI inflation"
+      "evaluator_note": "FY23 (7,225 Cr) vs FY24 (8,142 Cr) different fiscal year periods"
+    }
+  },
+  {
+    "instance_id": "gold_test_pair_7",
+    "fact_a_id": "gold_survey_cpi_fy24",
+    "fact_b_id": "gold_survey_food_cpi_fy25",
+    "features": {
+      "entity_similarity": 1.0,
+      "entity_embedding_cosine": 1.0,
+      "metric_similarity": 0.7317,
+      "metric_definition_cosine": 0.8974,
+      "numeric_relative_diff": 0.3571,
+      "numeric_log_ratio": 0.1919,
+      "unit_compatibility": 1.0,
+      "temporal_period_overlap_iou": 0.0,
+      "temporal_vintage_delta_days": 0.0,
+      "forecast_status_match": 1.0,
+      "scope_overlap_score": 0.5,
+      "source_independence_score": 0.0
+    },
+    "label": "SCOPE_MISMATCH",
+    "source_type": "gold_human",
+    "metadata": {
+      "evaluator_note": "General CPI basket vs Food sub-index component"
     }
   }
 ]
