@@ -9,7 +9,6 @@ from backend.app.services.model_gateway import model_gateway
 from backend.app.services.hallucination_firewall import hallucination_firewall
 from backend.app.ml.classifier import FactRelationshipClassifier
 from backend.app.ml.feature_extractor import FeatureExtractor
-from backend.app.ml.gold_curator import GoldCurator
 from backend.app.ml.active_learning import ActiveLearningService
 from backend.app.eval.benchmark_runner import BenchmarkRunner
 from backend.app.models.contradiction import ContradictionClass, PairwiseRelation
@@ -25,76 +24,53 @@ async def get_galaxy_graph(max_year: Optional[int] = Query(None, description="Fi
     return graph_service.get_galaxy_graph(max_year=max_year)
 
 # --- 2. Facts & Provenance ---
-def _get_merged_facts_dict() -> Dict[str, Any]:
+def _get_operational_facts_dict() -> Dict[str, Any]:
+    """Reads active canonical facts strictly from the operational knowledge graph."""
     from backend.app.models.graph_nodes import NodeType
     from backend.app.models.fact import CanonicalFact
-    facts: Dict[str, Any] = {f.fact_id: f for f in GoldCurator.get_gold_facts()}
+    facts: Dict[str, Any] = {}
     for node_id, node_data in graph_service.nx_graph.nodes(data=True):
         if node_data.get("node_type") == NodeType.FACT and "metadata" in node_data:
-            if node_id not in facts:
-                try:
-                    facts[node_id] = CanonicalFact.model_validate(node_data["metadata"])
-                except Exception:
-                    pass
+            try:
+                facts[node_id] = CanonicalFact.model_validate(node_data["metadata"])
+            except Exception:
+                pass
     return facts
 
 @api_router.get("/facts")
 async def get_all_facts():
-    facts_dict = _get_merged_facts_dict()
+    facts_dict = _get_operational_facts_dict()
     return [f.model_dump() for f in facts_dict.values()]
 
 @api_router.get("/facts/{fact_id}")
 async def get_fact_by_id(fact_id: str):
-    facts_dict = _get_merged_facts_dict()
-    target_id = fact_id if fact_id in facts_dict else FACT_ALIASES.get(fact_id, fact_id)
-    if target_id not in facts_dict:
-        raise HTTPException(status_code=404, detail="Fact not found")
-    return facts_dict[target_id].model_dump()
+    facts_dict = _get_operational_facts_dict()
+    if fact_id not in facts_dict:
+        raise HTTPException(status_code=404, detail=f"Fact '{fact_id}' not found in active knowledge graph")
+    return facts_dict[fact_id].model_dump()
 
 # --- 3. Forensic Fact Investigator & Hypothesis Comparison ---
 class CompareRequest(BaseModel):
     fact_a_id: str
     fact_b_id: str
 
-FACT_ALIASES = {
-    "f_dlhv_ebitda": "gold_dlhv_adj_ebitda_ar_fy24",
-    "f_dlhv_pres_ebitda": "gold_dlhv_adj_ebitda_pres_fy24",
-    "f_imf_gdp": "gold_india_gdp_imf_fy25",
-    "f_ind_gdp_survey": "gold_india_gdp_survey_fy25",
-    "f_rbi_cpi": "gold_rbi_cpi_fy24",
-    "f_ind_cpi_survey": "gold_survey_cpi_fy24",
-    "gold_dlhv_ebitda_parser_conflict": "gold_dlhv_ebitda_parser_conflict",
-    "gold_dlhv_statutory_ebitda_fy24": "gold_dlhv_statutory_ebitda_fy24",
-}
-
 @api_router.post("/facts/compare")
 async def compare_facts(req: CompareRequest):
-    facts = _get_merged_facts_dict()
+    facts = _get_operational_facts_dict()
 
-    # Resolve direct IDs first, followed by known aliases
-    fact_a_key = req.fact_a_id if req.fact_a_id in facts else FACT_ALIASES.get(req.fact_a_id, req.fact_a_id)
-    fact_b_key = req.fact_b_id if req.fact_b_id in facts else FACT_ALIASES.get(req.fact_b_id, req.fact_b_id)
+    if req.fact_a_id not in facts:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Fact A '{req.fact_a_id}' not found in active knowledge graph"
+        )
+    if req.fact_b_id not in facts:
+        raise HTTPException(
+            status_code=404,
+            detail=f"Fact B '{req.fact_b_id}' not found in active knowledge graph"
+        )
 
-    # If key still not in facts, perform fuzzy resolution against available facts
-    if fact_a_key not in facts:
-        for f_id in facts:
-            if req.fact_a_id.lower() in f_id.lower():
-                fact_a_key = f_id
-                break
-        if fact_a_key not in facts:
-            fact_a_key = next(iter(facts.keys()))
-
-    if fact_b_key not in facts or fact_b_key == fact_a_key:
-        for f_id in facts:
-            if f_id != fact_a_key and req.fact_b_id.lower() in f_id.lower():
-                fact_b_key = f_id
-                break
-        if fact_b_key not in facts or fact_b_key == fact_a_key:
-            other_keys = [k for k in facts.keys() if k != fact_a_key]
-            fact_b_key = other_keys[0] if other_keys else fact_a_key
-
-    fact_a = facts[fact_a_key]
-    fact_b = facts[fact_b_key]
+    fact_a = facts[req.fact_a_id]
+    fact_b = facts[req.fact_b_id]
 
     features = FeatureExtractor.extract_features(fact_a, fact_b)
     pred_class, confidence, prob_dict, uncertainty, alt_class = classifier.predict(features)

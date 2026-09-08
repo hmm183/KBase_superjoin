@@ -8,7 +8,8 @@ import {
   HelpCircle, 
   Compass, 
   Send,
-  Eye
+  Eye,
+  AlertTriangle
 } from 'lucide-react';
 
 interface FactInvestigatorProps {
@@ -29,6 +30,7 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
   const [factAId, setFactAId] = useState<string>(initialFactAId || (facts[0]?.fact_id || ''));
   const [factBId, setFactBId] = useState<string>(initialFactBId || (facts[1]?.fact_id || ''));
   const [relation, setRelation] = useState<PairwiseRelation | null>(null);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     if (initialFactAId) setFactAId(initialFactAId);
@@ -36,7 +38,11 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
   }, [initialFactAId, initialFactBId]);
 
   useEffect(() => {
-    if (!factAId || !factBId || factAId === factBId) return;
+    if (!factAId || !factBId || factAId === factBId) {
+      setRelation(null);
+      setErrorMsg(null);
+      return;
+    }
 
     fetch('/api/facts/compare', {
       method: 'POST',
@@ -45,17 +51,21 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
     })
       .then(async res => {
         if (!res.ok) {
-          throw new Error(`Comparison API returned status ${res.status}`);
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.detail || `Comparison API returned HTTP ${res.status}`);
         }
         return res.json();
       })
       .then(data => {
         if (data && Array.isArray(data.hypotheses)) {
           setRelation(data);
+          setErrorMsg(null);
         }
       })
       .catch(err => {
         console.error('Comparison failed:', err);
+        setRelation(null);
+        setErrorMsg(err.message || 'Fact comparison failed. Please verify that both facts exist in the active graph.');
       });
   }, [factAId, factBId]);
 
@@ -122,6 +132,24 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
         </div>
       </div>
 
+      {/* Error Alert Banner */}
+      {errorMsg && (
+        <div style={{
+          padding: '12px 16px',
+          background: 'rgba(239, 68, 68, 0.1)',
+          border: '1px solid rgba(239, 68, 68, 0.3)',
+          borderRadius: '8px',
+          color: '#F87171',
+          fontSize: '13px',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '10px'
+        }}>
+          <AlertTriangle size={16} />
+          <span><strong>Investigation Error:</strong> {errorMsg}</span>
+        </div>
+      )}
+
       {/* Case Presets */}
       <div style={{
         display: 'flex',
@@ -130,18 +158,51 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
         flexWrap: 'wrap'
       }}>
         {[
-          { label: 'Case 1 — CPI Corroboration', a: 'gold_rbi_cpi_fy24', b: 'gold_survey_cpi_fy24', color: '#10B981' },
-          { label: 'Case 2 — CPI Contradiction', a: 'gold_rbi_cpi_fy26_proj', b: 'gold_imf_cpi_fy26_proj', color: '#EF4444' },
-          { label: 'Case 3 — Revenue Period (Context)', a: 'gold_dlhv_rev_fy23', b: 'gold_dlhv_rev_fy24', color: '#3B82F6' },
-          { label: 'Case 4 — Scale (126.6 Cr vs 1,266 Mn)', a: 'gold_dlhv_adj_ebitda_ar_fy24', b: 'gold_dlhv_adj_ebitda_pres_fy24', color: '#F59E0B' }
+          { 
+            label: 'Case 1 — CPI Corroboration', 
+            resolve: () => {
+              const cpiFacts = facts.filter(f => f.fact_id.includes('cpi') || f.predicate.name.toLowerCase().includes('cpi'));
+              return [cpiFacts[0]?.fact_id || facts[0]?.fact_id || '', cpiFacts[1]?.fact_id || facts[1]?.fact_id || ''];
+            },
+            color: '#10B981' 
+          },
+          { 
+            label: 'Case 2 — Forecast / Target Divergence', 
+            resolve: () => {
+              const proj = facts.find(f => f.temporal.observation_type === 'projection' || f.fact_id.includes('proj')) || facts[0];
+              const other = facts.find(f => f.fact_id !== proj?.fact_id) || facts[1];
+              return [proj?.fact_id || '', other?.fact_id || ''];
+            },
+            color: '#EF4444' 
+          },
+          { 
+            label: 'Case 3 — Revenue Temporal Period', 
+            resolve: () => {
+              const revFacts = facts.filter(f => f.predicate.name.toLowerCase().includes('revenue') || f.fact_id.includes('rev'));
+              return [revFacts[0]?.fact_id || facts[0]?.fact_id || '', revFacts[1]?.fact_id || facts[1]?.fact_id || ''];
+            },
+            color: '#3B82F6' 
+          },
+          { 
+            label: 'Case 4 — Definition / Metric Variance', 
+            resolve: () => {
+              const ebitda = facts.find(f => f.predicate.name.toLowerCase().includes('ebitda') || f.fact_id.includes('ebitda')) || facts[0];
+              const diff = facts.find(f => f.fact_id !== ebitda?.fact_id && (f.predicate.name.toLowerCase().includes('profit') || f.predicate.name.toLowerCase().includes('ebitda'))) || facts[1];
+              return [ebitda?.fact_id || '', diff?.fact_id || ''];
+            },
+            color: '#F59E0B' 
+          }
         ].map((c, i) => {
-          const isSelected = factAId === c.a && factBId === c.b;
+          const [targetA, targetB] = c.resolve();
+          const isSelected = factAId === targetA && factBId === targetB;
           return (
             <button
               key={i}
               onClick={() => {
-                setFactAId(c.a);
-                setFactBId(c.b);
+                if (targetA && targetB) {
+                  setFactAId(targetA);
+                  setFactBId(targetB);
+                }
               }}
               style={{
                 background: isSelected ? 'var(--bg-surface-elevated)' : 'var(--bg-card)',

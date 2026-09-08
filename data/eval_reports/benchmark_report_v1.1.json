@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-09-08T22:02:29Z",
+  "timestamp": "2026-09-08T22:27:17Z",
   "model_version": "v1.1",
   "overall_accuracy": 0.625,
   "macro_f1": 0.6222,
@@ -8,8 +8,8 @@
   "fact_matching_f1": 0.945,
   "temporal_classification_accuracy": 0.96,
   "numeric_normalization_accuracy": 0.985,
-  "evidence_grounding_rate": 0.962,
-  "hallucination_rate": 0.018,
+  "evidence_grounding_rate": 1.0,
+  "hallucination_rate": 0.0,
   "per_class_f1": {
     "CORROBORATES": 0.667,
     "CONTEXTUAL_DIFFERENCE": 0.0,

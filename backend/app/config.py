@@ -17,9 +17,9 @@ class Settings(BaseSettings):
     MONGO_DB_NAME: str = "superjoin_evidence_graph"
     
     # Neo4j
-    NEO4J_URI: str = os.getenv("NEO4J_URI", "neo4j+s://cac7b806.databases.neo4j.io")
-    NEO4J_USERNAME: str = os.getenv("NEO4J_USERNAME", "cac7b806")
-    NEO4J_PASSWORD: str = os.getenv("NEO4J_PASSWORD", "vBO2RGeS_9jWf5Gz3YgdVKpyTszAJInQFIdli7GCK_g")
+    NEO4J_URI: str = os.getenv("NEO4J_URI", "")
+    NEO4J_USERNAME: str = os.getenv("NEO4J_USERNAME", "")
+    NEO4J_PASSWORD: str = os.getenv("NEO4J_PASSWORD", "")
     
     # Cloudinary
     CLOUDINARY_CLOUD_NAME: str = os.getenv("CLOUDINARY_CLOUD_NAME", "")

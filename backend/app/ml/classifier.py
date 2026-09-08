@@ -255,13 +255,25 @@ class FactRelationshipClassifier:
             "boundary_vintage_drift": 0
         }
 
+        # Dynamically compute evidence grounding rate and hallucination/uncertainty rate
+        uncertainties = []
+        grounded_count = 0
+        for inst in test_instances:
+            _, _, prob_d, uncert, _ = self.predict(inst.features)
+            uncertainties.append(uncert)
+            if inst.features.unit_compatibility > 0 and inst.features.entity_similarity >= 0.5:
+                grounded_count += 1
+
+        dyn_grounding_rate = round(float(grounded_count / max(len(test_instances), 1)), 4)
+        dyn_hallucination_rate = round(float(sum(1 for u in uncertainties if u > 0.85) / max(len(test_instances), 1)), 4)
+
         return EvaluationMetrics(
             total_test_samples=len(test_instances),
             accuracy=round(float(acc), 4),
             macro_f1=round(float(macro_f1), 4),
             weighted_f1=round(float(weighted_f1), 4),
-            evidence_grounding_rate=0.962, # 96.2% grounded in coordinates
-            hallucination_rate=0.018, # 1.8% firewall rejection rate
+            evidence_grounding_rate=dyn_grounding_rate,
+            hallucination_rate=dyn_hallucination_rate,
             per_class_f1=per_class_dict,
             confusion_matrix=cm_dict,
             failure_taxonomy_counts=failures,

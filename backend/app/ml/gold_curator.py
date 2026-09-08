@@ -9,8 +9,11 @@ from backend.app.ml.feature_extractor import FeatureExtractor
 
 class GoldCurator:
     """
-    Curates hand-verified gold fact pairs directly from the Delhivery
-    and India Macroeconomy starter datasets.
+    Held-Out Evaluation Benchmark Suite.
+    Provides curated, human-verified ground-truth fact pairs (get_gold_test_pairs())
+    used exclusively by benchmark_runner.py and classifier.evaluate() to measure
+    generalization, classification F1, and confusion matrix against a fixed benchmark.
+    Decoupled from operational graph ingestion (which extracts facts dynamically from PDFs).
     """
 
     @classmethod

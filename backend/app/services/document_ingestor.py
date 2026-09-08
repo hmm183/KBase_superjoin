@@ -110,113 +110,19 @@ class DocumentIngestor:
 
     def extract_and_index_facts(self, doc_record: DocumentRecord) -> List[Any]:
         """
-        Extracts candidate canonical facts from OCR blocks of an ingested PDF
-        and registers them into the Knowledge Graph.
+        Extracts candidate canonical facts using the generalizable, schema-agnostic
+        FactExtractor engine and registers them dynamically into the Knowledge Graph.
         """
         from backend.app.services.graph_service import graph_service
-        from backend.app.models.fact import (
-            CanonicalFact, FactSubject, FactPredicate, FactValue,
-            TemporalScope, FactProvenance, UnitType, ObservationType
-        )
-        import re
+        from backend.app.services.fact_extractor import fact_extractor
 
-        extracted_facts = []
-        doc_id = doc_record.document_id
-        pages_to_scan = min(doc_record.total_pages, 12)
+        extracted_facts = fact_extractor.extract_facts_from_document(doc_record, max_pages=15)
+        for fact in extracted_facts:
+            graph_service.add_canonical_fact(fact)
 
-        patterns = [
-            (r'(?:Revenue|Total\s+Income|Sales|Freight\s+Revenue)\s*(?:from\s+operations)?\s*[:\-–]?\s*(?:₹|Rs\.?|INR)?\s*([\d,]+(?:\.\d+)?)\s*(Cr|Crore|Lakh|Million|Billion|Mn|Bn|%)?', "Revenue", UnitType.CURRENCY_INR_CRORE),
-            (r'(?:Adjusted\s+)?EBITDA\s*[:\-–]?\s*(?:₹|Rs\.?|INR)?\s*([\d,]+(?:\.\d+)?)\s*(Cr|Crore|Lakh|Million|Billion|Mn|Bn|%)?', "Adjusted EBITDA", UnitType.CURRENCY_INR_CRORE),
-            (r'(?:Net\s+Profit|PAT|Profit\s+after\s+Tax)\s*[:\-–]?\s*(?:₹|Rs\.?|INR)?\s*([\d,]+(?:\.\d+)?)\s*(Cr|Crore|Lakh|Million|Billion|Mn|Bn|%)?', "Net Profit", UnitType.CURRENCY_INR_CRORE),
-            (r'(?:GDP\s+Growth|Real\s+GDP|Growth\s+Rate)\s*[:\-–]?\s*([\d,]+(?:\.\d+)?)\s*%', "Real GDP Growth", UnitType.PERCENTAGE),
-            (r'(?:CPI|Inflation|Headline\s+Inflation|Food\s+Inflation)\s*[:\-–]?\s*([\d,]+(?:\.\d+)?)\s*%', "Headline CPI Inflation", UnitType.PERCENTAGE),
-            (r'(?:Tonnage|Freight\s+Tonnage|Volume)\s*[:\-–]?\s*([\d,]+(?:\.\d+)?)\s*(Mn\s+Tons|Million\s+Tonnes|Tons|Tonnes)?', "Freight Tonnage", UnitType.COUNT)
-        ]
-
-        for p_num in range(1, pages_to_scan + 1):
-            blocks_data = self.get_page_ocr_blocks(doc_id, p_num)
-            if not blocks_data or not blocks_data.get("blocks"):
-                continue
-
-            blocks = blocks_data["blocks"]
-            for b_idx, b in enumerate(blocks):
-                text = b.get("text", "")
-                combined_text = text
-                if b_idx + 1 < len(blocks):
-                    combined_text += " " + blocks[b_idx + 1].get("text", "")
-
-                for pat, metric_name, default_unit in patterns:
-                    m = re.search(pat, text, re.IGNORECASE) or re.search(pat, combined_text, re.IGNORECASE)
-                    if m:
-                        val_str = m.group(1).replace(",", "")
-                        try:
-                            val_float = float(val_str)
-                        except ValueError:
-                            continue
-
-                        if val_float == p_num:
-                            continue
-
-                        unit = default_unit
-                        if len(m.groups()) >= 2 and m.group(2):
-                            u_text = m.group(2).lower()
-                            if "%" in u_text:
-                                unit = UnitType.PERCENTAGE
-                            elif "cr" in u_text or "crore" in u_text:
-                                unit = UnitType.CURRENCY_INR_CRORE
-                            elif "lakh" in u_text:
-                                unit = UnitType.CURRENCY_INR_LAKH
-                            elif "million" in u_text or "mn" in u_text:
-                                unit = UnitType.CURRENCY_INR_CRORE
-
-                        period = "FY24"
-                        year_match = re.search(r'(?:FY\s*(\d{2,4})|20(\d{2}))', combined_text, re.IGNORECASE)
-                        if year_match:
-                            y_tok = year_match.group(1) or year_match.group(2)
-                            period = f"FY{y_tok[-2:]}" if len(y_tok) == 2 else f"FY{y_tok[-2:]}"
-
-                        clean_stem = re.sub(r'[^a-zA-Z0-9]', '_', Path(doc_id).stem).lower()
-                        metric_slug = re.sub(r'[^a-zA-Z0-9]', '_', metric_name).lower()
-                        fact_id = f"fact_{clean_stem}_{metric_slug}_p{p_num}_{len(extracted_facts)+1}"
-                        entity_name = doc_record.title.split()[0] if doc_record.title else "Entity"
-
-                        fact = CanonicalFact(
-                            fact_id=fact_id,
-                            fingerprint=CanonicalFact.generate_fingerprint(entity_name, metric_name, period),
-                            subject=FactSubject(
-                                entity_id=f"ent_{clean_stem}",
-                                canonical_name=entity_name,
-                                entity_type="ORGANIZATION"
-                            ),
-                            predicate=FactPredicate(
-                                metric_id=f"metric_{metric_slug}",
-                                name=metric_name,
-                                category="FINANCIAL" if unit != UnitType.PERCENTAGE else "MACROECONOMIC"
-                            ),
-                            value=FactValue(
-                                raw_text=m.group(0),
-                                normalized_value=val_float,
-                                unit=unit
-                            ),
-                            temporal=TemporalScope(
-                                reference_period=period,
-                                observation_type=ObservationType.ACTUAL
-                            ),
-                            provenance=FactProvenance(
-                                document_id=doc_id,
-                                document_title=doc_record.title,
-                                document_hash=doc_record.sha256_hash,
-                                page_number=p_num,
-                                bounding_box=[b.get("x1", 100.0), b.get("y1", 200.0), b.get("x2", 400.0), b.get("y2", 250.0)],
-                                raw_snippet=combined_text[:200],
-                                parser_engine="pymupdf_ocr"
-                            )
-                        )
-                        graph_service.add_canonical_fact(fact)
-                        extracted_facts.append(fact)
-                        break
-
+        doc_record.extracted_facts_count = len(extracted_facts)
         return extracted_facts
+
 
     def delete_document(self, doc_id: str) -> bool:
         """Deletes a custom user-uploaded PDF. Rejects deletion of system-protected company datasets."""

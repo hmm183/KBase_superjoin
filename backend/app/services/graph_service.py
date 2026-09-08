@@ -11,7 +11,6 @@ from backend.app.models.graph_nodes import (
 )
 from backend.app.models.fact import CanonicalFact, ObservationType
 from backend.app.models.contradiction import ContradictionClass, PairwiseRelation
-from backend.app.ml.gold_curator import GoldCurator
 
 class GraphService:
     """
@@ -45,62 +44,76 @@ class GraphService:
                 self.neo4j_online = False
 
     def _populate_starter_graph(self):
-        """Pre-populates the graph with curated starter dataset facts."""
-        facts = GoldCurator.get_gold_facts()
-        for f in facts:
-            self.add_canonical_fact(f)
+        """
+        Populates the operational knowledge graph dynamically from indexed starter datasets.
+        Decoupled from GoldCurator (which is strictly a held-out evaluation benchmark).
+        """
+        from backend.app.services.document_ingestor import document_ingestor
+        from backend.app.services.fact_extractor import fact_extractor
+        from backend.app.ml.classifier import FactRelationshipClassifier
+        from backend.app.ml.feature_extractor import FeatureExtractor
 
-        # Connect known corroborations and contradictions
-        # 1. Delhivery EBITDA Corroboration (AR vs Pres)
-        self.add_pairwise_edge(
-            "gold_dlhv_adj_ebitda_ar_fy24",
-            "gold_dlhv_adj_ebitda_pres_fy24",
-            LinkType.CORROBORATES,
-            weight=1.0,
-            delta="Exact match ₹126.6 Cr"
-        )
-        # 2. Delhivery EBITDA Parser Conflict (126.6 Cr vs 1266 Cr)
-        self.add_pairwise_edge(
-            "gold_dlhv_adj_ebitda_ar_fy24",
-            "gold_dlhv_ebitda_parser_conflict",
-            LinkType.CONTRADICTS,
-            weight=1.0,
-            is_tension_laser=True,
-            delta="10x discrepancy (₹126.6 Cr vs ₹1,266 Cr)"
-        )
-        # 3. Delhivery Adjusted vs Statutory EBITDA
-        self.add_pairwise_edge(
-            "gold_dlhv_adj_ebitda_ar_fy24",
-            "gold_dlhv_statutory_ebitda_fy24",
-            LinkType.CONTEXTUAL_DIFF,
-            weight=0.8,
-            delta="Definition: Adj (₹126.6 Cr) vs Statutory (-₹68.2 Cr)"
-        )
-        # 4. India GDP Forecast vs Actual (IMF vs Eco Survey)
-        self.add_pairwise_edge(
-            "gold_india_gdp_survey_fy25",
-            "gold_india_gdp_imf_fy25",
-            LinkType.CONTRADICTS,
-            weight=0.9,
-            is_tension_laser=True,
-            delta="Projection vs Advance Estimate (7.0% vs 6.5%)"
-        )
-        # 5. CPI Inflation Corroboration (RBI vs Eco Survey)
-        self.add_pairwise_edge(
-            "gold_rbi_cpi_fy24",
-            "gold_survey_cpi_fy24",
-            LinkType.CORROBORATES,
-            weight=1.0,
-            delta="Both report 5.4% CPI"
-        )
-        # 6. Citation link: IMF cites Economic Survey
-        self.add_pairwise_edge(
-            "doc_03-imf-india-2025-article-iv-excerpt.pdf",
-            "doc_01-india-economic-survey-2024-25-excerpt.pdf",
-            LinkType.CITES,
-            weight=0.5,
-            delta="Official Source Citation"
-        )
+        all_extracted: List[CanonicalFact] = []
+        for doc_id, doc_rec in document_ingestor.loaded_docs.items():
+            facts = fact_extractor.extract_facts_from_document(doc_rec, max_pages=15)
+            doc_rec.extracted_facts_count = len(facts)
+            for f in facts:
+                self.add_canonical_fact(f)
+                all_extracted.append(f)
+
+        # Dynamically infer relationship edges across extracted facts using the trained classifier
+        try:
+            classifier = FactRelationshipClassifier()
+            for i in range(len(all_extracted)):
+                for j in range(i + 1, min(i + 10, len(all_extracted))):
+                    f_a = all_extracted[i]
+                    f_b = all_extracted[j]
+                    if f_a.fact_id == f_b.fact_id:
+                        continue
+                    try:
+                        feats = FeatureExtractor.extract_features(f_a, f_b)
+                        pred_class, conf, prob_dict, uncert, _ = classifier.predict(feats)
+                        if conf < 0.65:
+                            continue
+
+                        if pred_class == ContradictionClass.CORROBORATES:
+                            self.add_pairwise_edge(
+                                f_a.fact_id, f_b.fact_id,
+                                LinkType.CORROBORATES,
+                                weight=float(conf),
+                                delta=f"Corroboration ({f_a.value.raw_text} matches {f_b.value.raw_text})"
+                            )
+                        elif pred_class in [ContradictionClass.GENUINE_CONTRADICTION, ContradictionClass.NUMERICAL_DISCREPANCY]:
+                            self.add_pairwise_edge(
+                                f_a.fact_id, f_b.fact_id,
+                                LinkType.CONTRADICTS,
+                                weight=float(conf),
+                                is_tension_laser=True,
+                                delta=f"Divergence ({f_a.value.raw_text} vs {f_b.value.raw_text})"
+                            )
+                        elif pred_class == ContradictionClass.DEFINITION_MISMATCH:
+                            self.add_pairwise_edge(
+                                f_a.fact_id, f_b.fact_id,
+                                LinkType.CONTEXTUAL_DIFF,
+                                weight=float(conf),
+                                delta=f"Definition shift ({f_a.predicate.name} vs {f_b.predicate.name})"
+                            )
+                    except Exception:
+                        pass
+        except Exception as e:
+            print(f"[GraphService] Edge inference notice: {e}")
+
+        # Link document citation
+        doc_imf = "doc_03-imf-india-2025-article-iv-excerpt.pdf"
+        doc_survey = "doc_01-india-economic-survey-2024-25-excerpt.pdf"
+        if self.nx_graph.has_node(doc_imf) and self.nx_graph.has_node(doc_survey):
+            self.add_pairwise_edge(
+                doc_imf,
+                doc_survey,
+                LinkType.CITES,
+                weight=0.5,
+                delta="Official Source Citation"
+            )
 
     def add_canonical_fact(self, fact: CanonicalFact):
         """Adds a Fact node along with its Document, Entity, and Metric nodes."""
