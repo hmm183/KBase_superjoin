@@ -56,37 +56,39 @@ FACT_ALIASES = {
 @api_router.post("/facts/compare")
 async def compare_facts(req: CompareRequest):
     gold_facts_list = GoldCurator.get_gold_facts()
-    facts = {f.fact_id: f for f in gold_facts_list}
+    facts: Dict[str, Any] = {f.fact_id: f for f in gold_facts_list}
 
-    # Resolve aliases or fuzzy matches
-    fact_a_key = FACT_ALIASES.get(req.fact_a_id, req.fact_a_id)
-    fact_b_key = FACT_ALIASES.get(req.fact_b_id, req.fact_b_id)
+    # Dynamically include any custom or newly extracted facts stored in graph_service
+    from backend.app.models.graph_nodes import NodeType
+    for node_id, node_data in graph_service.nx_graph.nodes(data=True):
+        if node_data.get("node_type") == NodeType.FACT and "metadata" in node_data:
+            if node_id not in facts:
+                try:
+                    facts[node_id] = CanonicalFact.model_validate(node_data["metadata"])
+                except Exception:
+                    pass
 
+    # Resolve direct IDs first, followed by known aliases
+    fact_a_key = req.fact_a_id if req.fact_a_id in facts else FACT_ALIASES.get(req.fact_a_id, req.fact_a_id)
+    fact_b_key = req.fact_b_id if req.fact_b_id in facts else FACT_ALIASES.get(req.fact_b_id, req.fact_b_id)
+
+    # If key still not in facts, perform fuzzy resolution against available facts
     if fact_a_key not in facts:
-        if "pres" in req.fact_a_id.lower():
-            fact_a_key = "gold_dlhv_adj_ebitda_pres_fy24"
-        elif "ebitda" in req.fact_a_id.lower():
-            fact_a_key = "gold_dlhv_adj_ebitda_ar_fy24"
-        elif "gdp" in req.fact_a_id.lower() or "imf" in req.fact_a_id.lower():
-            fact_a_key = "gold_india_gdp_imf_fy25"
-        elif "cpi" in req.fact_a_id.lower() or "rbi" in req.fact_a_id.lower():
-            fact_a_key = "gold_rbi_cpi_fy24"
-        else:
-            fact_a_key = gold_facts_list[0].fact_id
+        for f_id in facts:
+            if req.fact_a_id.lower() in f_id.lower():
+                fact_a_key = f_id
+                break
+        if fact_a_key not in facts:
+            fact_a_key = next(iter(facts.keys()))
 
     if fact_b_key not in facts or fact_b_key == fact_a_key:
-        if "conflict" in req.fact_b_id.lower() or "parser" in req.fact_b_id.lower():
-            fact_b_key = "gold_dlhv_ebitda_parser_conflict"
-        elif "pres" in req.fact_b_id.lower() and fact_a_key != "gold_dlhv_adj_ebitda_pres_fy24":
-            fact_b_key = "gold_dlhv_adj_ebitda_pres_fy24"
-        elif "ebitda" in req.fact_b_id.lower() and fact_a_key != "gold_dlhv_adj_ebitda_ar_fy24":
-            fact_b_key = "gold_dlhv_adj_ebitda_ar_fy24"
-        elif "survey" in req.fact_b_id.lower() or "gdp" in req.fact_b_id.lower():
-            fact_b_key = "gold_india_gdp_survey_fy25"
-        elif "cpi" in req.fact_b_id.lower():
-            fact_b_key = "gold_survey_cpi_fy24"
-        else:
-            fact_b_key = gold_facts_list[1].fact_id if len(gold_facts_list) > 1 else gold_facts_list[0].fact_id
+        for f_id in facts:
+            if f_id != fact_a_key and req.fact_b_id.lower() in f_id.lower():
+                fact_b_key = f_id
+                break
+        if fact_b_key not in facts or fact_b_key == fact_a_key:
+            other_keys = [k for k in facts.keys() if k != fact_a_key]
+            fact_b_key = other_keys[0] if other_keys else fact_a_key
 
     fact_a = facts[fact_a_key]
     fact_b = facts[fact_b_key]
