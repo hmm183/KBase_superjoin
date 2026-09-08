@@ -9,6 +9,7 @@
 *.cert
 *.pfx
 *.mp4
+!fact_knowledge_layer_demo.mp4
 
 # ==============================================================================
 # Python & Bytecode

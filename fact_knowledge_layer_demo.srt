@@ -1,0 +1,83 @@
+1
+00:00:00,200 --> 00:00:02,500
+Welcome to the Fact Knowledge Layer.
+
+2
+00:00:02,799 --> 00:00:08,500
+Document Hub: Indexing 6 official corporate & macroeconomic filings across 508 pages.
+
+3
+00:00:08,800 --> 00:00:23,500
+Five-Stage Pipeline: SHA-256 integrity, PyMuPDF vectors, schema-free fact extraction & sub-pixel grounding.
+
+4
+00:00:24,000 --> 00:00:30,500
+Document Lens: Inspecting Delhivery Annual Report FY24 Page 36.
+
+5
+00:00:31,000 --> 00:00:38,000
+Exact Grounding: Green bounding-box overlay highlights Adjusted EBITDA at positive ₹126.6 Crore.
+
+6
+00:00:38,500 --> 00:00:44,500
+Three-Pane Inspector: Synchronized OCR text streams, deep zoom & in-situ AI forensic auditor.
+
+7
+00:00:45,000 --> 00:00:52,000
+Query Studio: Cross-corpus natural language retrieval with exact source coordinates.
+
+8
+00:00:52,500 --> 00:00:57,500
+Grounded Citations: Direct 1-click jump links into verified PDF bounding boxes.
+
+9
+00:00:58,000 --> 00:01:02,500
+Hallucination Firewall: Every numeric claim cross-checked against active knowledge graph.
+
+10
+00:01:03,000 --> 00:01:11,000
+Forensic Fact Investigator: Evaluating headline CPI inflation across independent authorities.
+
+11
+00:01:11,500 --> 00:01:20,500
+RBI Report (5.4% CPI) vs Economic Survey (5.4% CPI) • LightGBM confirms 100% Corroboration.
+
+12
+00:01:21,000 --> 00:01:31,000
+Case 2: Forward-Looking Forecast Clash — RBI FY26 (4.0%) vs IMF Article IV (2.8%).
+
+13
+00:01:31,500 --> 00:01:40,500
+Authentic 120 bps Policy Divergence • Classified as CONTRADICTS with high-tension galaxy edges.
+
+14
+00:01:41,000 --> 00:01:51,000
+Case 3: Revenue Period Reconciliation — Delhivery FY23 (₹7,225 Cr) vs FY24 (₹8,142 Cr).
+
+15
+00:01:51,500 --> 00:02:00,500
+Temporal Period Distinction • Distinguishes fiscal reporting periods without false contradiction.
+
+16
+00:02:01,000 --> 00:02:09,000
+Case 4: Real Discovered Failure Analysis — Engineering transparency on parser divergence.
+
+17
+00:02:09,500 --> 00:02:18,000
+Parser Arena: PyMuPDF vs pdfplumber reveals multi-tier header collapse & footnote scale omissions.
+
+18
+00:02:18,500 --> 00:02:25,500
+Held-Out Benchmark: Boundary confusion between forecasts & definition mismatches routed to Active Learning.
+
+19
+00:02:26,000 --> 00:02:34,000
+3D Evidence Galaxy: Temporal scrubbing across 284 dynamically extracted knowledge graph facts.
+
+20
+00:02:34,500 --> 00:02:40,500
+Rigorous Evaluation: 62.5% Accuracy & 0.622 Macro F1 on held-out test suite with 100% Grounding.
+
+21
+00:02:41,000 --> 00:02:46,000
+Zero Hardcoding • Generalizable Schema-Free Extraction • Production Ready.
