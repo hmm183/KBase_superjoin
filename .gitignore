@@ -17,6 +17,7 @@
 __pycache__/
 *.py[cod]
 *$py.class
+scratch_*.py
 *.so
 .Python
 build/

@@ -671,15 +671,11 @@ The assignment states: *"We may test your solution with additional PDFs, so it s
 - **Generic Unit & Scale Normalization**: Scale harmonization is based on universal mathematical multipliers ($10^7$ for Crore, $10^5$ for Lakh, $10^6$ for Million, $10^9$ for Billion), evaluating ratio parity generically across any document.
 - **Zero Silent Router Fallbacks**: Missing fact IDs return descriptive HTTP 404 errors with full frontend alert handling.
 
-### 3. Disclosure of AI Tools Used (Assignment Requirement)
+### 3. Disclosure of AI Tools Used
 In accordance with the assignment guidelines:
-- **Coding & Scaffolding**: Antigravity IDE paired with Claude 3.5 Sonnet and Gemini 2.0 Pro / Flash was used for scaffolding component boilerplate, drafting TypeScript interfaces, writing CSS tokens, and assisting with regex patterns.
+- **Coding & Scaffolding**: Claude 3.5 Sonnet and Gemini Flash was used for scaffolding component boilerplate, drafting TypeScript interfaces, writing CSS tokens, and assisting with regex patterns.
 - **Runtime Inference**: Groq (`llama-3.3-70b`), Google Gemini (`gemini-flash-latest`), and Cerebras (`llama3.1-70b`) are used at runtime by `ModelGateway` for contextual question answering, narrative synthesis, and hallucination firewall verification.
 - **Local Machine Learning**: Scikit-Learn and LightGBM are used locally for training the tabular fact relationship classifier on engineered feature vectors with zero network dependencies.
-
-### 4. Submission Form Details
-- **Assignment**: Superjoin Engineering Intern Hiring Assignment (VIT 2026)
-- **Submission Form**: `https://forms.gle/3fLdBQ2D6Zm2Gqtv7`
 
 ---
 
