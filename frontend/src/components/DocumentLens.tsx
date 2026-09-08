@@ -409,8 +409,8 @@ export const DocumentLens: React.FC<DocumentLensProps> = ({
   return (
     <div style={{ width: '100%', height: '100%', display: 'flex', background: '#05070E', overflow: 'hidden' }}>
       
-      {/* 1. LEFT SIDEBAR: Document Selector, Upload & Facts (320px) */}
-      <aside style={{ width: '320px', background: '#080C17', borderRight: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', flexShrink: 0, zIndex: 10 }}>
+      {/* 1. LEFT SIDEBAR: Document Selector, Upload & Facts (290px) */}
+      <aside style={{ width: '290px', background: '#080C17', borderRight: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', flexShrink: 0, zIndex: 10 }}>
         {/* Document Selector & Upload Header */}
         <div style={{ padding: '16px', borderBottom: '1px solid rgba(255,255,255,0.08)' }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
@@ -621,49 +621,97 @@ export const DocumentLens: React.FC<DocumentLensProps> = ({
       {/* 2. CENTER STAGE: Document Canvas Area */}
       <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden', background: '#030408' }}>
         {/* Canvas Toolbar */}
-        <div style={{ height: '52px', padding: '0 24px', background: '#080C17', borderBottom: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <FileSearch size={18} style={{ color: '#818CF8' }} />
-            <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '14px', fontWeight: 700, color: '#FFFFFF' }}>
+        <div style={{
+          minHeight: '48px',
+          padding: '0 14px',
+          background: '#080C17',
+          borderBottom: '1px solid rgba(255,255,255,0.08)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          gap: '10px',
+          overflowX: 'auto',
+          overflowY: 'hidden',
+          flexShrink: 0,
+          whiteSpace: 'nowrap'
+        }}>
+          {/* Left: Document Identity & Meta */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0, flexShrink: 1, overflow: 'hidden' }}>
+            <FileSearch size={16} style={{ color: '#818CF8', flexShrink: 0 }} />
+            <span
+              title={currentDoc.title}
+              style={{
+                fontFamily: 'Outfit, sans-serif',
+                fontSize: '13px',
+                fontWeight: 700,
+                color: '#FFFFFF',
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                maxWidth: '220px'
+              }}
+            >
               {currentDoc.title}
             </span>
-            <span style={{ fontSize: '11px', fontFamily: 'JetBrains Mono, monospace', color: '#64748B' }}>
-              • Page {pageNumber} ({Math.round(pageWidth)}×{Math.round(pageHeight)} pt)
+            <span
+              title={`Page ${pageNumber} • Dimensions: ${Math.round(pageWidth)}×${Math.round(pageHeight)} pt`}
+              style={{
+                fontSize: '11px',
+                fontFamily: 'JetBrains Mono, monospace',
+                color: '#94A3B8',
+                whiteSpace: 'nowrap',
+                background: 'rgba(255,255,255,0.05)',
+                padding: '2px 6px',
+                borderRadius: '4px',
+                border: '1px solid rgba(255,255,255,0.08)',
+                flexShrink: 0
+              }}
+            >
+              Pg {pageNumber}
             </span>
             {isLandscapeSpread && (
-              <span style={{ fontSize: '10px', fontFamily: 'JetBrains Mono, monospace', background: 'rgba(56, 189, 248, 0.12)', color: '#38BDF8', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(56, 189, 248, 0.3)' }}>
-                2-PAGE SPREAD
+              <span
+                title="2-Page Landscape Spread"
+                style={{
+                  fontSize: '10px',
+                  fontFamily: 'JetBrains Mono, monospace',
+                  background: 'rgba(56, 189, 248, 0.12)',
+                  color: '#38BDF8',
+                  padding: '2px 6px',
+                  borderRadius: '4px',
+                  border: '1px solid rgba(56, 189, 248, 0.3)',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0
+                }}
+              >
+                SPREAD
               </span>
             )}
             {currentDoc.is_system_protected && (
-              <span style={{ fontSize: '10px', fontFamily: 'JetBrains Mono, monospace', background: 'rgba(16, 185, 129, 0.12)', color: '#34D399', padding: '2px 6px', borderRadius: '4px', border: '1px solid rgba(16, 185, 129, 0.3)', display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <span
+                title="System Protected Document"
+                style={{
+                  fontSize: '10px',
+                  fontFamily: 'JetBrains Mono, monospace',
+                  background: 'rgba(16, 185, 129, 0.12)',
+                  color: '#34D399',
+                  padding: '2px 6px',
+                  borderRadius: '4px',
+                  border: '1px solid rgba(16, 185, 129, 0.3)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '3px',
+                  whiteSpace: 'nowrap',
+                  flexShrink: 0
+                }}
+              >
                 <Lock size={10} /> PROTECTED
               </span>
             )}
-            <button
-              onClick={() => setIsDocManagerOpen(true)}
-              style={{
-                background: 'rgba(99, 102, 241, 0.15)',
-                border: '1px solid rgba(99, 102, 241, 0.4)',
-                color: '#C7D2FE',
-                padding: '4px 10px',
-                borderRadius: '6px',
-                fontSize: '11px',
-                fontFamily: 'Outfit, sans-serif',
-                fontWeight: 600,
-                display: 'flex',
-                alignItems: 'center',
-                gap: '5px',
-                cursor: 'pointer',
-                marginLeft: '4px'
-              }}
-            >
-              <FolderPlus size={13} />
-              <span>Manage PDFs (Add / Delete)</span>
-            </button>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+          {/* Right: Inspection Toggles, Zoom & Navigation */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexShrink: 0 }}>
             {/* OCR Detection Layer Toggle */}
             <button
               onClick={() => setShowOcrLayer(!showOcrLayer)}
@@ -671,114 +719,146 @@ export const DocumentLens: React.FC<DocumentLensProps> = ({
                 background: showOcrLayer ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255,255,255,0.05)',
                 border: `1px solid ${showOcrLayer ? 'rgba(56, 189, 248, 0.4)' : 'rgba(255,255,255,0.1)'}`,
                 color: showOcrLayer ? '#38BDF8' : '#94A3B8',
-                padding: '6px 12px',
-                borderRadius: '8px',
+                padding: '5px 9px',
+                borderRadius: '6px',
                 fontSize: '11px',
                 fontWeight: 600,
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                cursor: 'pointer'
+                gap: '5px',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s ease'
               }}
+              title="Toggle OCR Detection Layer"
             >
-              <Eye size={13} />
-              <span>OCR Layer: {showOcrLayer ? 'ON' : 'OFF'}</span>
+              <Eye size={12} />
+              <span>OCR: {showOcrLayer ? 'ON' : 'OFF'}</span>
               {ocrData && (
-                <span style={{ background: 'rgba(255,255,255,0.1)', padding: '1px 5px', borderRadius: '4px', fontSize: '10px' }}>
-                  {ocrData.tables.length}T • {ocrData.total_blocks}B
+                <span style={{ background: 'rgba(255,255,255,0.1)', padding: '1px 4px', borderRadius: '3px', fontSize: '9.5px', fontFamily: 'JetBrains Mono, monospace' }}>
+                  {ocrData.tables.length}T•{ocrData.total_blocks}B
                 </span>
               )}
             </button>
 
-            {/* Scale Conversion Overlay Toggle */}
+            {/* Scale Reconciliation Toggle */}
             <button
               onClick={() => setShowParserOverlay(!showParserOverlay)}
               style={{
                 background: showParserOverlay ? 'rgba(168, 85, 247, 0.15)' : 'rgba(255,255,255,0.05)',
                 border: `1px solid ${showParserOverlay ? 'rgba(168, 85, 247, 0.4)' : 'rgba(255,255,255,0.1)'}`,
                 color: showParserOverlay ? '#D8B4FE' : '#94A3B8',
-                padding: '6px 12px',
-                borderRadius: '8px',
+                padding: '5px 9px',
+                borderRadius: '6px',
                 fontSize: '11px',
                 fontWeight: 600,
                 display: 'flex',
                 alignItems: 'center',
-                gap: '6px',
-                cursor: 'pointer'
+                gap: '5px',
+                cursor: 'pointer',
+                whiteSpace: 'nowrap',
+                transition: 'all 0.15s ease'
               }}
+              title="Toggle Scale Reconciliation"
             >
-              <Layers size={13} />
-              <span>Scale Reconciliation: {showParserOverlay ? 'ON' : 'OFF'}</span>
+              <Layers size={12} />
+              <span>Scale Recon: {showParserOverlay ? 'ON' : 'OFF'}</span>
             </button>
 
-            {/* Zoom Controls & Fit Page */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+            {/* Zoom Controls */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '3px', background: 'rgba(255,255,255,0.03)', padding: '2px 4px', borderRadius: '7px', border: '1px solid rgba(255,255,255,0.06)' }}>
               <button
                 onClick={() => setZoomLevel(isLandscapeSpread ? 0.76 : 0.86)}
                 style={{
                   background: 'rgba(255, 255, 255, 0.06)',
-                  border: '1px solid rgba(255, 255, 255, 0.14)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
                   color: '#CBD5E1',
-                  padding: '5px 10px',
-                  borderRadius: '6px',
+                  padding: '4px 7px',
+                  borderRadius: '5px',
                   fontSize: '11px',
                   fontWeight: 600,
                   cursor: 'pointer',
-                  transition: 'all 0.15s ease'
+                  whiteSpace: 'nowrap',
+                  lineHeight: 1.2
                 }}
                 title="Fit document page to screen"
               >
-                Fit Page
+                Fit
               </button>
               <button
                 onClick={() => setZoomLevel(1.0)}
                 style={{
                   background: zoomLevel === 1.0 ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.06)',
-                  border: `1px solid ${zoomLevel === 1.0 ? '#38BDF8' : 'rgba(255, 255, 255, 0.14)'}`,
+                  border: `1px solid ${zoomLevel === 1.0 ? '#38BDF8' : 'rgba(255, 255, 255, 0.12)'}`,
                   color: zoomLevel === 1.0 ? '#38BDF8' : '#CBD5E1',
-                  padding: '5px 8px',
-                  borderRadius: '6px',
+                  padding: '4px 6px',
+                  borderRadius: '5px',
                   fontSize: '11px',
                   fontWeight: 600,
-                  cursor: 'pointer'
+                  cursor: 'pointer',
+                  whiteSpace: 'nowrap',
+                  lineHeight: 1.2
                 }}
                 title="Reset zoom to 100%"
               >
                 100%
               </button>
-              <div style={{ display: 'flex', alignItems: 'center', background: '#0D1424', padding: '3px 6px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', background: '#0D1424', padding: '1px 3px', borderRadius: '5px', border: '1px solid rgba(255,255,255,0.08)' }}>
                 <button
                   onClick={() => setZoomLevel(prev => Math.max(0.5, prev - 0.15))}
-                  style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '4px' }}
+                  style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '3px', display: 'flex', alignItems: 'center' }}
+                  title="Zoom Out"
                 >
-                  <ZoomOut size={15} />
+                  <ZoomOut size={13} />
                 </button>
-                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px', color: '#FFFFFF', padding: '0 8px' }}>
+                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '11px', color: '#FFFFFF', padding: '0 4px', minWidth: '36px', textAlign: 'center' }}>
                   {Math.round(zoomLevel * 100)}%
                 </span>
                 <button
                   onClick={() => setZoomLevel(prev => Math.min(2.5, prev + 0.15))}
-                  style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '4px' }}
+                  style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '3px', display: 'flex', alignItems: 'center' }}
+                  title="Zoom In"
                 >
-                  <ZoomIn size={15} />
+                  <ZoomIn size={13} />
                 </button>
               </div>
             </div>
 
-            {/* Page Arrow Steppers */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+            {/* Page Navigation Steppers */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
               <button
                 onClick={() => onPageChange(documentId, Math.max(1, pageNumber - 1))}
                 disabled={pageNumber <= 1}
-                style={{ background: '#0F172A', border: '1px solid rgba(255,255,255,0.1)', color: '#CBD5E1', padding: '5px 8px', borderRadius: '6px', cursor: 'pointer', opacity: pageNumber <= 1 ? 0.3 : 1 }}
+                style={{
+                  background: '#0F172A',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: '#CBD5E1',
+                  padding: '5px 7px',
+                  borderRadius: '5px',
+                  cursor: pageNumber <= 1 ? 'not-allowed' : 'pointer',
+                  opacity: pageNumber <= 1 ? 0.35 : 1,
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+                title="Previous Page"
               >
-                <ChevronLeft size={15} />
+                <ChevronLeft size={14} />
               </button>
               <button
                 onClick={() => onPageChange(documentId, pageNumber + 1)}
-                style={{ background: '#0F172A', border: '1px solid rgba(255,255,255,0.1)', color: '#CBD5E1', padding: '5px 8px', borderRadius: '6px', cursor: 'pointer' }}
+                style={{
+                  background: '#0F172A',
+                  border: '1px solid rgba(255,255,255,0.1)',
+                  color: '#CBD5E1',
+                  padding: '5px 7px',
+                  borderRadius: '5px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center'
+                }}
+                title="Next Page"
               >
-                <ChevronRight size={15} />
+                <ChevronRight size={14} />
               </button>
             </div>
           </div>
@@ -1049,8 +1129,8 @@ export const DocumentLens: React.FC<DocumentLensProps> = ({
         </div>
       </main>
 
-      {/* 3. RIGHT INSPECTOR PANEL: Forensic Provenance & Scale Diff (350px) */}
-      <aside style={{ width: '350px', background: '#080C17', borderLeft: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', flexShrink: 0, overflowY: 'auto', padding: '16px', gap: '16px' }}>
+      {/* 3. RIGHT INSPECTOR PANEL: Forensic Provenance & Scale Diff (320px) */}
+      <aside style={{ width: '320px', background: '#080C17', borderLeft: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', flexShrink: 0, overflowY: 'auto', padding: '16px', gap: '16px' }}>
         
         {/* Interactive Page Intelligence Q&A Card - Prominent AI Auditor */}
         <div style={{
