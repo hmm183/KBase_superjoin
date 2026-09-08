@@ -132,8 +132,8 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
         {[
           { label: 'Case 1 — CPI Corroboration', a: 'gold_rbi_cpi_fy24', b: 'gold_survey_cpi_fy24', color: '#10B981' },
           { label: 'Case 2 — CPI Contradiction', a: 'gold_rbi_cpi_fy26_proj', b: 'gold_imf_cpi_fy26_proj', color: '#EF4444' },
-          { label: 'Case 3 — Unit Scale', a: 'gold_dlhv_adj_ebitda_ar_fy24', b: 'gold_dlhv_adj_ebitda_pres_fy24', color: '#3B82F6' },
-          { label: 'Case 4 — OCR Anomaly', a: 'gold_dlhv_adj_ebitda_pres_fy24', b: 'gold_dlhv_ebitda_parser_conflict', color: '#F59E0B' }
+          { label: 'Case 3 — Revenue Period (Context)', a: 'gold_dlhv_rev_fy23', b: 'gold_dlhv_rev_fy24', color: '#3B82F6' },
+          { label: 'Case 4 — Scale (126.6 Cr vs 1,266 Mn)', a: 'gold_dlhv_adj_ebitda_ar_fy24', b: 'gold_dlhv_adj_ebitda_pres_fy24', color: '#F59E0B' }
         ].map((c, i) => {
           const isSelected = factAId === c.a && factBId === c.b;
           return (
