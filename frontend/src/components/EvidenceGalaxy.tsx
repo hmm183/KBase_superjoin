@@ -55,7 +55,7 @@ export const EvidenceGalaxy: React.FC<EvidenceGalaxyProps> = ({
     // Defs & Glow Filters
     const defs = svg.append('defs');
 
-    // Intense Glow Filter
+    // Subtle node highlight filter
     const filter = defs.append('filter')
       .attr('id', 'cosmic-glow')
       .attr('x', '-50%')
@@ -63,7 +63,7 @@ export const EvidenceGalaxy: React.FC<EvidenceGalaxyProps> = ({
       .attr('width', '200%')
       .attr('height', '200%');
     filter.append('feGaussianBlur')
-      .attr('stdDeviation', '6.0')
+      .attr('stdDeviation', '3.0')
       .attr('result', 'coloredBlur');
     const feMerge = filter.append('feMerge');
     feMerge.append('feMergeNode').attr('in', 'coloredBlur');
@@ -355,7 +355,7 @@ export const EvidenceGalaxy: React.FC<EvidenceGalaxyProps> = ({
             gap: '6px',
             cursor: 'pointer',
             pointerEvents: 'auto',
-            boxShadow: '0 4px 14px rgba(79, 70, 229, 0.5)',
+            boxShadow: 'none',
             transition: 'all 0.15s ease'
           }}
           title="Auto-fit both clusters into the viewport without scrolling"
@@ -391,11 +391,11 @@ export const EvidenceGalaxy: React.FC<EvidenceGalaxyProps> = ({
         </div>
       )}
 
-      {/* Bottom Bar: Graph Time Machine Capsule */}
+      {/* Bottom Bar: Timeline */}
       <div className="time-machine-capsule">
         <div className="time-title">
-          <Clock size={16} />
-          <span>Graph Time Machine</span>
+          <Clock size={14} />
+          <span>Timeline</span>
         </div>
 
         <div className="time-buttons-row">

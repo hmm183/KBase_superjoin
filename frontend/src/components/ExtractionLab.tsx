@@ -26,19 +26,40 @@ export const ExtractionLab: React.FC<ExtractionLabProps> = ({ onOpenInLens }) =>
       <div className="section-header-row">
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-            <span style={{ fontSize: '10px', fontFamily: 'JetBrains Mono, monospace', background: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B', border: '1px solid rgba(245, 158, 11, 0.3)', padding: '2px 8px', borderRadius: '4px', fontWeight: 800 }}>
-              CASE 4 BENCHMARK
-            </span>
-            <span style={{ fontSize: '11px', color: '#64748B', fontFamily: 'JetBrains Mono, monospace' }}>
-              Extraction Failure & Multi-Parser Disagreement Detection
+            <span className="brand-badge" style={{ margin: 0 }}>
+              Case 4 Benchmark
             </span>
           </div>
           <h2 className="section-title">
-            <Layers size={22} style={{ color: '#38BDF8' }} />
-            <span>Extraction Disagreement Arena (Multi-Parser Consensus)</span>
+            <Layers size={18} />
+            <span>Parser Arena</span>
           </h2>
           <p className="section-subtitle">
-            Ensemble layout & OCR parsing: when Docling TableFormer and PyMuPDF/PP-Structure disagree, conflicts become first-class graph artifacts.
+            Detect disagreements across PDF parsers to catch extraction errors.
+          </p>
+        </div>
+      </div>
+
+      {/* Parser Explanation */}
+      <div style={{
+        background: 'var(--bg-card)',
+        border: '1px solid var(--border-subtle)',
+        borderRadius: 'var(--radius-md)',
+        padding: '12px 16px',
+        display: 'flex',
+        alignItems: 'flex-start',
+        gap: '10px',
+        marginBottom: '4px'
+      }}>
+        <div style={{ color: 'var(--text-muted)', marginTop: '2px' }}>
+          <Layers size={16} />
+        </div>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+          <span style={{ fontSize: '13px', fontWeight: 600, color: 'var(--text-primary)' }}>
+            Why multi-parser consensus?
+          </span>
+          <p style={{ margin: 0, fontSize: '12px', color: 'var(--text-secondary)', lineHeight: 1.5 }}>
+            Financial filings contain multi-tier tables and merged cells. Single parsers regularly produce errors—for instance, OCR can drop decimal marks (reading <strong style={{ color: '#FB7185' }}>₹1,266 Cr</strong> instead of <strong style={{ color: '#34D399' }}>₹126.6 Cr</strong>, a 10x distortion). The Parser Arena runs an ensemble in parallel and flags disagreements as forensic artifacts.
           </p>
         </div>
       </div>

@@ -66,14 +66,14 @@ export const EvaluationLab: React.FC = () => {
       <div className="section-header-row">
         <div>
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-            <FlaskConical size={24} style={{ color: '#818CF8' }} />
-            <h2 className="section-title">ML Lifecycle, Evaluation & Active Learning Lab</h2>
+            <FlaskConical size={18} />
+            <h2 className="section-title">Evaluation & Learning</h2>
             <span className="brand-badge">
               Model: {report?.model_version || 'v1.0'}
             </span>
           </div>
           <p className="section-subtitle">
-            Rigorous evaluation suite, hand-adjudicated gold benchmarks, uncertainty triage, and honest failure analysis.
+            Model metrics, benchmarks, and human-in-the-loop adjudication.
           </p>
         </div>
 
@@ -86,13 +86,17 @@ export const EvaluationLab: React.FC = () => {
             display: 'flex', 
             alignItems: 'center', 
             gap: '8px', 
-            background: 'linear-gradient(135deg, #059669, #0D9488)', 
-            border: 'none', 
-            padding: '10px 18px',
-            boxShadow: '0 4px 16px rgba(16, 185, 129, 0.3)'
+            background: 'var(--emerald)', 
+            border: '1px solid var(--emerald)', 
+            color: '#FFFFFF',
+            fontWeight: 600,
+            fontSize: '13px',
+            padding: '8px 16px',
+            borderRadius: '8px',
+            cursor: retraining ? 'not-allowed' : 'pointer'
           }}
         >
-          <RefreshCw size={14} className={retraining ? 'spin-slow' : ''} />
+          <RefreshCw size={15} className={retraining ? 'spin-slow' : ''} />
           <span>{retraining ? 'Retraining LightGBM...' : 'Trigger Incremental Retraining'}</span>
         </button>
       </div>
@@ -169,9 +173,9 @@ export const EvaluationLab: React.FC = () => {
 
           {/* Per-Class F1 Breakdown */}
           <div className="verdict-full-card">
-            <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-              <BarChart3 size={16} style={{ color: '#818CF8' }} />
-              <span>12-Class Taxonomy Performance Breakdown</span>
+            <h3 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+              <BarChart3 size={15} />
+              <span>Per-Class F1 Scores</span>
             </h3>
             <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
               {Object.entries(report.per_class_f1).map(([className, score]) => (
@@ -240,37 +244,77 @@ export const EvaluationLab: React.FC = () => {
                   </div>
 
                   {/* Adjudication Action Buttons */}
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap', paddingTop: '6px' }}>
-                    <span style={{ fontSize: '12px', color: '#94A3B8', fontFamily: 'JetBrains Mono, monospace', marginRight: '8px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap', paddingTop: '8px' }}>
+                    <span style={{ fontSize: '12px', color: '#CBD5E1', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, marginRight: '4px' }}>
                       Adjudicate as:
                     </span>
                     <button
                       onClick={() => handleAdjudicate(item.queue_id, 'CORROBORATES')}
-                      className="demo-chip-btn"
-                      style={{ background: 'rgba(16, 185, 129, 0.15)', border: '1px solid rgba(16, 185, 129, 0.35)', color: '#34D399', padding: '6px 12px', borderRadius: '8px' }}
+                      style={{ 
+                        background: '#059669', 
+                        border: '1px solid #10B981', 
+                        color: '#FFFFFF', 
+                        fontWeight: 700,
+                        fontSize: '12px',
+                        padding: '7px 14px', 
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        boxShadow: '0 1px 4px rgba(16, 185, 129, 0.4)',
+                        transition: 'all 0.15s ease'
+                      }}
                     >
-                      Corroborates
+                      ✓ Corroborates
                     </button>
                     <button
                       onClick={() => handleAdjudicate(item.queue_id, 'CONTEXTUAL_DIFFERENCE')}
-                      className="demo-chip-btn"
-                      style={{ background: 'rgba(99, 102, 241, 0.15)', border: '1px solid rgba(99, 102, 241, 0.35)', color: '#A5B4FC', padding: '6px 12px', borderRadius: '8px' }}
+                      style={{ 
+                        background: '#4338CA', 
+                        border: '1px solid #6366F1', 
+                        color: '#FFFFFF', 
+                        fontWeight: 700,
+                        fontSize: '12px',
+                        padding: '7px 14px', 
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        boxShadow: '0 1px 4px rgba(99, 102, 241, 0.4)',
+                        transition: 'all 0.15s ease'
+                      }}
                     >
                       Contextual Difference
                     </button>
                     <button
                       onClick={() => handleAdjudicate(item.queue_id, 'SCOPE_MISMATCH')}
-                      className="demo-chip-btn"
-                      style={{ background: 'rgba(245, 158, 11, 0.15)', border: '1px solid rgba(245, 158, 11, 0.35)', color: '#FCD34D', padding: '6px 12px', borderRadius: '8px' }}
+                      style={{ 
+                        background: '#D97706', 
+                        border: '1px solid #F59E0B', 
+                        color: '#FFFFFF', 
+                        fontWeight: 700,
+                        fontSize: '12px',
+                        padding: '7px 14px', 
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        boxShadow: '0 1px 4px rgba(245, 158, 11, 0.4)',
+                        transition: 'all 0.15s ease'
+                      }}
                     >
                       Scope Mismatch
                     </button>
                     <button
                       onClick={() => handleAdjudicate(item.queue_id, 'GENUINE_CONTRADICTION')}
-                      className="demo-chip-btn"
-                      style={{ background: 'rgba(244, 63, 94, 0.15)', border: '1px solid rgba(244, 63, 94, 0.35)', color: '#FB7185', padding: '6px 12px', borderRadius: '8px' }}
+                      style={{ 
+                        background: '#DC2626', 
+                        border: '1px solid #EF4444', 
+                        color: '#FFFFFF', 
+                        fontWeight: 700,
+                        fontSize: '12px',
+                        padding: '7px 14px', 
+                        borderRadius: '6px',
+                        cursor: 'pointer',
+                        boxShadow: '0 1px 4px rgba(239, 68, 68, 0.4)',
+                        transition: 'all 0.15s ease'
+                      }}
                     >
-                      Genuine Contradiction
+                      ⚠ Genuine Contradiction
                     </button>
                   </div>
                 </div>

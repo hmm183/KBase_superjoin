@@ -22,7 +22,8 @@ import {
   History, 
   Trash2, 
   Plus, 
-  Clock 
+  Clock,
+  Orbit 
 } from 'lucide-react';
 
 interface QueryStudioProps {
@@ -327,6 +328,12 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
   const [customSource, setCustomSource] = useState('Verified Filing');
   const [customColor, setCustomColor] = useState('#EC4899');
   const [hoveredPoint, setHoveredPoint] = useState<any | null>(null);
+
+  // 5. Grounding Agent Tool Selection (Citations + Graph Tool)
+  const [selectedTools, setSelectedTools] = useState<{ citations: boolean; graph: boolean }>({
+    citations: true,
+    graph: true
+  });
 
   // Synchronize active query to localStorage
   useEffect(() => {
@@ -689,7 +696,7 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
             </span>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '12px' }}>
             {DEMO_SCENARIOS.map(sc => {
               const isSelected = activeScenarioId === sc.id;
               return (
@@ -699,35 +706,49 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                   onClick={() => handleSelectScenario(sc)}
                   style={{
                     background: isSelected ? '#151C2C' : '#0B0D14',
-                    border: `1px solid ${isSelected ? sc.badgeColor : 'rgba(255, 255, 255, 0.08)'}`,
-                    borderRadius: '7px',
-                    padding: '10px 12px',
+                    border: `1.5px solid ${isSelected ? sc.badgeColor : 'rgba(255, 255, 255, 0.1)'}`,
+                    borderRadius: '8px',
+                    padding: '12px 14px',
                     textAlign: 'left',
                     cursor: 'pointer',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: '5px',
+                    gap: '6px',
+                    boxShadow: isSelected ? `0 2px 12px ${sc.badgeColor}22` : '0 1px 3px rgba(0,0,0,0.3)',
                     transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.borderColor = sc.badgeColor;
+                      e.currentTarget.style.background = '#111624';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.1)';
+                      e.currentTarget.style.background = '#0B0D14';
+                    }
                   }}
                 >
                   <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                     <span style={{
-                      fontSize: '9px',
+                      fontSize: '10px',
                       fontFamily: 'JetBrains Mono, monospace',
                       fontWeight: 800,
                       color: sc.badgeColor,
-                      background: `${sc.badgeColor}18`,
-                      padding: '1px 5px',
-                      borderRadius: '3px'
+                      background: `${sc.badgeColor}22`,
+                      border: `1px solid ${sc.badgeColor}44`,
+                      padding: '2px 7px',
+                      borderRadius: '4px'
                     }}>
                       {sc.badge}
                     </span>
-                    <Play size={9} style={{ color: sc.badgeColor, fill: isSelected ? sc.badgeColor : 'none' }} />
+                    <Play size={10} style={{ color: sc.badgeColor, fill: isSelected ? sc.badgeColor : 'none' }} />
                   </div>
-                  <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#F8FAFC', lineHeight: 1.2 }}>
+                  <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#F8FAFC', lineHeight: 1.25 }}>
                     {sc.title}
                   </span>
-                  <span style={{ fontSize: '10px', color: '#94A3B8', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                  <span style={{ fontSize: '10.5px', color: '#94A3B8', lineHeight: 1.35, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
                     {sc.description}
                   </span>
                 </button>
@@ -818,6 +839,97 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                 {sq}
               </button>
             ))}
+          </div>
+
+          {/* Active Forensic Grounding Tools Selection */}
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            background: '#0B0F19',
+            border: '1px solid rgba(255, 255, 255, 0.1)',
+            borderRadius: '8px',
+            padding: '8px 12px',
+            flexWrap: 'wrap',
+            gap: '10px',
+            marginTop: '2px'
+          }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+              <span style={{
+                fontSize: '10.5px',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontWeight: 800,
+                color: '#94A3B8',
+                textTransform: 'uppercase',
+                letterSpacing: '0.5px'
+              }}>
+                Tool Selection:
+              </span>
+              
+              {/* Citations Tool (Selected) */}
+              <button
+                type="button"
+                onClick={() => setSelectedTools(prev => ({ ...prev, citations: !prev.citations }))}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: selectedTools.citations ? 'rgba(37, 99, 235, 0.18)' : 'rgba(255, 255, 255, 0.03)',
+                  border: `1.5px solid ${selectedTools.citations ? '#3B82F6' : 'rgba(255, 255, 255, 0.1)'}`,
+                  color: selectedTools.citations ? '#FFFFFF' : '#64748B',
+                  padding: '5px 11px',
+                  borderRadius: '6px',
+                  fontSize: '11.5px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <CheckCircle2 size={13} style={{ color: selectedTools.citations ? '#60A5FA' : '#475569' }} />
+                <FileText size={13} style={{ color: selectedTools.citations ? '#93C5FD' : '#475569' }} />
+                <span>Citations Tool</span>
+                {selectedTools.citations && (
+                  <span style={{ fontSize: '9px', background: '#2563EB', color: '#FFF', padding: '1px 5px', borderRadius: '3px', fontWeight: 800 }}>
+                    SELECTED
+                  </span>
+                )}
+              </button>
+
+              {/* Graph Tool (Selected) */}
+              <button
+                type="button"
+                onClick={() => setSelectedTools(prev => ({ ...prev, graph: !prev.graph }))}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: selectedTools.graph ? 'rgba(16, 185, 129, 0.18)' : 'rgba(255, 255, 255, 0.03)',
+                  border: `1.5px solid ${selectedTools.graph ? '#10B981' : 'rgba(255, 255, 255, 0.1)'}`,
+                  color: selectedTools.graph ? '#FFFFFF' : '#64748B',
+                  padding: '5px 11px',
+                  borderRadius: '6px',
+                  fontSize: '11.5px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+              >
+                <CheckCircle2 size={13} style={{ color: selectedTools.graph ? '#34D399' : '#475569' }} />
+                <Orbit size={13} style={{ color: selectedTools.graph ? '#6EE7B7' : '#475569' }} />
+                <span>Graph Tool</span>
+                {selectedTools.graph && (
+                  <span style={{ fontSize: '9px', background: '#059669', color: '#FFF', padding: '1px 5px', borderRadius: '3px', fontWeight: 800 }}>
+                    SELECTED
+                  </span>
+                )}
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+              <span style={{ fontSize: '10.5px', color: '#64748B', fontFamily: 'JetBrains Mono, monospace' }}>
+                Routing Active: Grounded Citations & Graph Subgraph Reasoner
+              </span>
+            </div>
           </div>
         </div>
 

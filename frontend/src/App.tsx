@@ -70,12 +70,8 @@ export const App: React.FC = () => {
       .then(res => res.json())
       .then(data => {
         setPrivacyMode(data.privacy_mode);
-        if (data.privacy_mode) {
-          setProviderStatus('AIR-GAP: LOCAL');
-        } else {
-          const cerebrasStat = data.providers?.cerebras?.status?.includes('QUOTA') ? 'CEREBRAS: QUOTA' : 'CEREBRAS OK';
-          setProviderStatus(`${cerebrasStat} • GROQ 65ms • GEMINI OK`);
-        }
+        const cerebrasStat = data.providers?.cerebras?.status?.includes('QUOTA') ? 'CEREBRAS: QUOTA' : 'CEREBRAS OK';
+        setProviderStatus(`${cerebrasStat} • GROQ 65ms • GEMINI OK`);
       })
       .catch(console.error);
   }, []);
@@ -90,11 +86,7 @@ export const App: React.FC = () => {
       .then(res => res.json())
       .then(data => {
         setPrivacyMode(data.privacy_mode);
-        if (data.privacy_mode) {
-          setProviderStatus('AIR-GAP: LOCAL');
-        } else {
-          setProviderStatus('CEREBRAS: QUOTA • GROQ 65ms • GEMINI OK');
-        }
+        setProviderStatus('CEREBRAS: QUOTA • GROQ 65ms • GEMINI OK');
       });
   };
 

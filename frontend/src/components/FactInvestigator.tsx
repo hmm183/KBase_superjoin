@@ -84,11 +84,11 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
       <div className="section-header-row">
         <div>
           <h2 className="section-title">
-            <GitCompare size={22} style={{ color: '#38BDF8' }} />
-            <span>Forensic Fact Investigator & Contradiction Observatory</span>
+            <GitCompare size={18} />
+            <span>Fact Comparison</span>
           </h2>
           <p className="section-subtitle">
-            Neuro-symbolic pairwise reconciliation using 12 structured distance features and hypothesis tournaments.
+            Compare two extracted facts and see how they relate.
           </p>
         </div>
 
@@ -106,7 +106,7 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
             ))}
           </select>
 
-          <span style={{ color: '#64748B', fontWeight: 800, fontSize: '13px' }}>VS</span>
+          <span style={{ color: 'var(--text-muted)', fontWeight: 600, fontSize: '12px' }}>vs</span>
 
           <select
             value={factBId}
@@ -122,62 +122,52 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
         </div>
       </div>
 
-      {/* 4 Official Cases Preset Selector */}
+      {/* Case Presets */}
       <div style={{
         display: 'flex',
         alignItems: 'center',
         gap: '8px',
-        background: '#0D111A',
-        border: '1px solid rgba(255, 255, 255, 0.08)',
-        borderRadius: '8px',
-        padding: '8px 12px',
         flexWrap: 'wrap'
       }}>
-        <span style={{
-          fontSize: '10px',
-          fontFamily: 'JetBrains Mono, monospace',
-          fontWeight: 800,
-          background: '#2563EB',
-          color: '#FFFFFF',
-          padding: '2px 6px',
-          borderRadius: '4px'
-        }}>
-          REQUIRED CASES
-        </span>
-        <span style={{ fontSize: '11px', color: '#94A3B8', marginRight: '4px' }}>
-          One-Click Presets:
-        </span>
         {[
-          { label: 'Case 1: Corroboration (CPI 5.4%)', a: 'gold_rbi_cpi_fy24', b: 'gold_survey_cpi_fy24', color: '#10B981' },
-          { label: 'Case 2: Contradiction (FY26 CPI 4.0% vs 2.8%)', a: 'gold_rbi_cpi_fy26_proj', b: 'gold_imf_cpi_fy26_proj', color: '#EF4444' },
-          { label: 'Case 3: Unit Scale (₹126.6 Cr vs ₹1,266.41 M)', a: 'gold_dlhv_adj_ebitda_ar_fy24', b: 'gold_dlhv_adj_ebitda_pres_fy24', color: '#3B82F6' },
-          { label: 'Case 4: OCR Anomaly (₹126.6 Cr vs ₹1,266 Cr)', a: 'gold_dlhv_adj_ebitda_pres_fy24', b: 'gold_dlhv_ebitda_parser_conflict', color: '#F59E0B' }
-        ].map((c, i) => (
-          <button
-            key={i}
-            onClick={() => {
-              setFactAId(c.a);
-              setFactBId(c.b);
-            }}
-            style={{
-              background: (factAId === c.a && factBId === c.b) ? '#1E2433' : 'rgba(255, 255, 255, 0.03)',
-              border: `1px solid ${(factAId === c.a && factBId === c.b) ? c.color : 'rgba(255, 255, 255, 0.08)'}`,
-              color: (factAId === c.a && factBId === c.b) ? '#FFFFFF' : '#CBD5E1',
-              padding: '3px 9px',
-              borderRadius: '5px',
-              fontSize: '11px',
-              fontWeight: 500,
-              cursor: 'pointer',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '5px',
-              transition: 'all 0.15s ease'
-            }}
-          >
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: c.color }} />
-            <span>{c.label}</span>
-          </button>
-        ))}
+          { label: 'Case 1 — CPI Corroboration', a: 'gold_rbi_cpi_fy24', b: 'gold_survey_cpi_fy24', color: '#10B981' },
+          { label: 'Case 2 — CPI Contradiction', a: 'gold_rbi_cpi_fy26_proj', b: 'gold_imf_cpi_fy26_proj', color: '#EF4444' },
+          { label: 'Case 3 — Unit Scale', a: 'gold_dlhv_adj_ebitda_ar_fy24', b: 'gold_dlhv_adj_ebitda_pres_fy24', color: '#3B82F6' },
+          { label: 'Case 4 — OCR Anomaly', a: 'gold_dlhv_adj_ebitda_pres_fy24', b: 'gold_dlhv_ebitda_parser_conflict', color: '#F59E0B' }
+        ].map((c, i) => {
+          const isSelected = factAId === c.a && factBId === c.b;
+          return (
+            <button
+              key={i}
+              onClick={() => {
+                setFactAId(c.a);
+                setFactBId(c.b);
+              }}
+              style={{
+                background: isSelected ? 'var(--bg-surface-elevated)' : 'var(--bg-card)',
+                border: `1px solid ${isSelected ? c.color : 'var(--border-subtle)'}`,
+                color: isSelected ? '#FAFAFA' : 'var(--text-secondary)',
+                padding: '8px 16px',
+                borderRadius: '8px',
+                fontSize: '13px',
+                fontWeight: isSelected ? 600 : 500,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                transition: 'all 0.15s ease'
+              }}
+            >
+              <span style={{ 
+                width: '7px', 
+                height: '7px', 
+                borderRadius: '50%', 
+                background: c.color
+              }} />
+              <span>{c.label}</span>
+            </button>
+          );
+        })}
       </div>
 
       {/* Dual-Pane Forensic Comparison Cards */}
@@ -186,8 +176,8 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
         {factA && (
           <div className="forensic-card">
             <div className="forensic-card-top">
-              <span className="brand-badge" style={{ margin: 0, background: 'rgba(99, 102, 241, 0.15)', color: '#A5B4FC' }}>
-                Primary Fact A
+              <span className="brand-badge" style={{ margin: 0 }}>
+                Fact A
               </span>
               <button
                 onClick={() => onOpenDocumentLens(factA.provenance.document_id, factA.provenance.page_number, factA.predicate.name)}
@@ -250,8 +240,8 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
         {factB && (
           <div className="forensic-card">
             <div className="forensic-card-top">
-              <span className="brand-badge" style={{ margin: 0, background: 'rgba(168, 85, 247, 0.15)', color: '#D8B4FE', borderColor: 'rgba(168, 85, 247, 0.3)' }}>
-                Comparative Fact B
+              <span className="brand-badge" style={{ margin: 0 }}>
+                Fact B
               </span>
               <button
                 onClick={() => onOpenDocumentLens(factB.provenance.document_id, factB.provenance.page_number, factB.predicate.name)}
@@ -319,13 +309,13 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
         <div className="verdict-full-card">
           <div className="verdict-header-row">
             <div>
-              <span style={{ fontSize: '11px', color: '#64748B', fontFamily: 'JetBrains Mono, monospace', textTransform: 'uppercase' }}>
-                ML + Symbolic Classification Verdict
+              <span style={{ fontSize: '11px', color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.3px' }}>
+                Classification Result
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginTop: '6px' }}>
                 {getClassificationBadge(relation.classification)}
-                <span style={{ fontSize: '13px', fontFamily: 'JetBrains Mono, monospace', color: '#CBD5E1' }}>
-                  Confidence: <strong style={{ color: '#FFFFFF' }}>{(relation.confidence * 100).toFixed(1)}%</strong>
+                <span style={{ fontSize: '13px', color: 'var(--text-secondary)' }}>
+                  Confidence: <strong style={{ color: 'var(--text-primary)' }}>{(relation.confidence * 100).toFixed(1)}%</strong>
                 </span>
               </div>
             </div>
@@ -355,9 +345,9 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
 
           {/* Hypothesis Tournament */}
           <div>
-            <h4 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', color: '#FFFFFF', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-              <Compass size={16} style={{ color: '#818CF8' }} />
-              <span>Hypothesis Tournament (Ranked Explanations)</span>
+            <h4 style={{ fontSize: '14px', fontWeight: 600, color: 'var(--text-primary)', display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
+              <Compass size={15} />
+              <span>Ranked Explanations</span>
             </h4>
             <div className="hypotheses-grid">
               {(relation.hypotheses || []).map(hyp => (
@@ -388,9 +378,9 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
           {/* What Would Change My Mind Panel */}
           {relation.what_would_change_my_mind && relation.what_would_change_my_mind.length > 0 && (
             <div className="mind-change-panel">
-              <h4 style={{ fontSize: '12px', fontWeight: 700, textTransform: 'uppercase', color: '#F59E0B', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <HelpCircle size={15} />
-                <span>"What Would Change My Mind?" (Explicit Ambiguity Resolution)</span>
+              <h4 style={{ fontSize: '12px', fontWeight: 600, textTransform: 'uppercase', color: 'var(--text-muted)', display: 'flex', alignItems: 'center', gap: '8px', letterSpacing: '0.3px' }}>
+                <HelpCircle size={14} />
+                <span>Ambiguity Conditions</span>
               </h4>
               <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                 {(relation.what_would_change_my_mind || []).map(crit => (

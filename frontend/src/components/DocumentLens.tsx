@@ -16,7 +16,6 @@ import {
   FolderPlus,
   FileText,
   X,
-  MessageSquare,
   Send,
   Sparkles
 } from 'lucide-react';
@@ -712,23 +711,58 @@ export const DocumentLens: React.FC<DocumentLensProps> = ({
               <span>Scale Reconciliation: {showParserOverlay ? 'ON' : 'OFF'}</span>
             </button>
 
-            {/* Zoom Controls */}
-            <div style={{ display: 'flex', alignItems: 'center', background: '#0D1424', padding: '3px 6px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
+            {/* Zoom Controls & Fit Page */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
               <button
-                onClick={() => setZoomLevel(prev => Math.max(0.6, prev - 0.2))}
-                style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '4px' }}
+                onClick={() => setZoomLevel(isLandscapeSpread ? 0.76 : 0.86)}
+                style={{
+                  background: 'rgba(255, 255, 255, 0.06)',
+                  border: '1px solid rgba(255, 255, 255, 0.14)',
+                  color: '#CBD5E1',
+                  padding: '5px 10px',
+                  borderRadius: '6px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  cursor: 'pointer',
+                  transition: 'all 0.15s ease'
+                }}
+                title="Fit document page to screen"
               >
-                <ZoomOut size={15} />
+                Fit Page
               </button>
-              <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px', color: '#FFFFFF', padding: '0 8px' }}>
-                {Math.round(zoomLevel * 100)}%
-              </span>
               <button
-                onClick={() => setZoomLevel(prev => Math.min(2.5, prev + 0.2))}
-                style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '4px' }}
+                onClick={() => setZoomLevel(1.0)}
+                style={{
+                  background: zoomLevel === 1.0 ? 'rgba(56, 189, 248, 0.15)' : 'rgba(255, 255, 255, 0.06)',
+                  border: `1px solid ${zoomLevel === 1.0 ? '#38BDF8' : 'rgba(255, 255, 255, 0.14)'}`,
+                  color: zoomLevel === 1.0 ? '#38BDF8' : '#CBD5E1',
+                  padding: '5px 8px',
+                  borderRadius: '6px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
+                title="Reset zoom to 100%"
               >
-                <ZoomIn size={15} />
+                100%
               </button>
+              <div style={{ display: 'flex', alignItems: 'center', background: '#0D1424', padding: '3px 6px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.1)' }}>
+                <button
+                  onClick={() => setZoomLevel(prev => Math.max(0.5, prev - 0.15))}
+                  style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '4px' }}
+                >
+                  <ZoomOut size={15} />
+                </button>
+                <span style={{ fontFamily: 'JetBrains Mono, monospace', fontSize: '12px', color: '#FFFFFF', padding: '0 8px' }}>
+                  {Math.round(zoomLevel * 100)}%
+                </span>
+                <button
+                  onClick={() => setZoomLevel(prev => Math.min(2.5, prev + 0.15))}
+                  style={{ background: 'transparent', border: 'none', color: '#94A3B8', cursor: 'pointer', padding: '4px' }}
+                >
+                  <ZoomIn size={15} />
+                </button>
+              </div>
             </div>
 
             {/* Page Arrow Steppers */}
@@ -751,7 +785,7 @@ export const DocumentLens: React.FC<DocumentLensProps> = ({
         </div>
 
         {/* Viewport Render Stage */}
-        <div style={{ flex: 1, overflow: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '32px' }}>
+        <div style={{ flex: 1, overflow: 'auto', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '16px' }}>
           {loading ? (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', color: '#94A3B8' }}>
               <Crosshair size={32} style={{ color: '#818CF8' }} />
@@ -776,7 +810,15 @@ export const DocumentLens: React.FC<DocumentLensProps> = ({
                 <img
                   src={previewUrl}
                   alt={`Document Page ${pageNumber}`}
-                  style={{ maxWidth: isLandscapeSpread ? '980px' : '720px', height: 'auto', display: 'block', pointerEvents: 'none', userSelect: 'none' }}
+                  style={{ 
+                    maxHeight: 'calc(100vh - 175px)', 
+                    maxWidth: isLandscapeSpread ? 'min(980px, calc(100vw - 640px))' : 'min(720px, calc(100vw - 640px))', 
+                    height: 'auto', 
+                    width: 'auto',
+                    display: 'block', 
+                    pointerEvents: 'none', 
+                    userSelect: 'none' 
+                  }}
                 />
               ) : (
                 <div style={{ width: '600px', height: '800px', background: '#0B0F1C', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#64748B' }}>
@@ -1007,20 +1049,49 @@ export const DocumentLens: React.FC<DocumentLensProps> = ({
         </div>
       </main>
 
-      {/* 3. RIGHT INSPECTOR PANEL: Forensic Provenance & Scale Diff (320px) */}
-      <aside style={{ width: '320px', background: '#080C17', borderLeft: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', flexShrink: 0, overflowY: 'auto', padding: '20px', gap: '16px' }}>
+      {/* 3. RIGHT INSPECTOR PANEL: Forensic Provenance & Scale Diff (350px) */}
+      <aside style={{ width: '350px', background: '#080C17', borderLeft: '1px solid rgba(255,255,255,0.1)', display: 'flex', flexDirection: 'column', flexShrink: 0, overflowY: 'auto', padding: '16px', gap: '16px' }}>
         
-        {/* Interactive Page Intelligence Q&A Card */}
-        <div style={{ background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.1), rgba(15, 23, 42, 0.6))', border: '1px solid rgba(6, 182, 212, 0.35)', borderRadius: '12px', padding: '14px', display: 'flex', flexDirection: 'column', gap: '10px', boxShadow: '0 8px 24px rgba(6, 182, 212, 0.15)' }}>
+        {/* Interactive Page Intelligence Q&A Card - Prominent AI Auditor */}
+        <div style={{
+          background: '#0B1324',
+          border: '1.5px solid #06B6D4',
+          borderRadius: '12px',
+          padding: '16px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '12px',
+          boxShadow: '0 4px 24px rgba(6, 182, 212, 0.25), inset 0 1px 0 rgba(34, 211, 238, 0.2)'
+        }}>
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <MessageSquare size={14} style={{ color: '#22D3EE' }} />
-              <span style={{ fontSize: '11px', fontFamily: 'JetBrains Mono, monospace', color: '#22D3EE', fontWeight: 800, textTransform: 'uppercase' }}>
-                Ask This Page (P.{pageNumber})
-              </span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <div style={{ background: '#0891B2', borderRadius: '6px', padding: '5px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <Sparkles size={14} style={{ color: '#FFFFFF' }} />
+              </div>
+              <div>
+                <span style={{ fontSize: '13px', fontFamily: 'Outfit, sans-serif', color: '#FFFFFF', fontWeight: 800, letterSpacing: '0.2px', display: 'block' }}>
+                  AI Forensic Auditor
+                </span>
+                <span style={{ fontSize: '10px', color: '#67E8F9', fontFamily: 'JetBrains Mono, monospace' }}>
+                  Page {pageNumber} Grounded Inspector
+                </span>
+              </div>
             </div>
-            <span style={{ fontSize: '9px', color: '#67E8F9', background: 'rgba(6, 182, 212, 0.2)', padding: '2px 6px', borderRadius: '4px' }}>
-              AI AUDITOR
+            <span style={{
+              fontSize: '10px',
+              fontWeight: 800,
+              fontFamily: 'JetBrains Mono, monospace',
+              color: '#FFFFFF',
+              background: '#0891B2',
+              border: '1px solid #22D3EE',
+              padding: '2px 8px',
+              borderRadius: '4px',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '4px'
+            }}>
+              <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: '#34D399', boxShadow: '0 0 6px #34D399' }} />
+              ONLINE
             </span>
           </div>
 
@@ -1029,20 +1100,20 @@ export const DocumentLens: React.FC<DocumentLensProps> = ({
               e.preventDefault();
               handleAskPageQuestion(pageQuestion);
             }}
-            style={{ display: 'flex', gap: '6px' }}
+            style={{ display: 'flex', gap: '8px' }}
           >
             <input 
               type="text" 
               value={pageQuestion} 
               onChange={e => setPageQuestion(e.target.value)} 
-              placeholder={`Ask anything about page ${pageNumber}...`} 
+              placeholder={`Ask anything about Page ${pageNumber}...`} 
               style={{
                 flex: 1,
-                background: '#0B1222',
-                border: '1px solid rgba(6, 182, 212, 0.3)',
-                borderRadius: '6px',
-                padding: '6px 10px',
-                fontSize: '11px',
+                background: '#0F1A30',
+                border: '1.5px solid rgba(6, 182, 212, 0.45)',
+                borderRadius: '7px',
+                padding: '8px 12px',
+                fontSize: '12px',
                 color: '#FFFFFF',
                 outline: 'none',
                 fontFamily: 'Outfit, sans-serif'
@@ -1052,26 +1123,30 @@ export const DocumentLens: React.FC<DocumentLensProps> = ({
               type="submit"
               disabled={pageQaLoading}
               style={{
-                background: 'linear-gradient(135deg, #0891B2, #06B6D4)',
-                border: 'none',
+                background: '#0891B2',
+                border: '1px solid #22D3EE',
                 color: '#FFFFFF',
-                padding: '6px 10px',
-                borderRadius: '6px',
+                padding: '8px 14px',
+                borderRadius: '7px',
+                fontWeight: 700,
+                fontSize: '11.5px',
                 cursor: pageQaLoading ? 'not-allowed' : 'pointer',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'center'
+                gap: '5px',
+                boxShadow: '0 2px 8px rgba(6, 182, 212, 0.35)'
               }}
-              title="Ask question about this page"
+              title="Audit this page with AI"
             >
-              {pageQaLoading ? <Sparkles size={12} className="spin-slow" /> : <Send size={12} />}
+              {pageQaLoading ? <Sparkles size={13} className="spin-slow" /> : <Send size={13} />}
+              <span>Ask</span>
             </button>
           </form>
 
           {/* Quick suggestions */}
           {!pageAnswer && (
-            <div style={{ display: 'flex', gap: '4px', flexWrap: 'wrap' }}>
-              {["What are the key numbers?", "Explain the tables"].map((sq, i) => (
+            <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+              {["What are the key numbers?", "Explain the tables", "EBITDA reconciliation"].map((sq, i) => (
                 <button
                   key={i}
                   type="button"
@@ -1080,13 +1155,23 @@ export const DocumentLens: React.FC<DocumentLensProps> = ({
                     handleAskPageQuestion(sq);
                   }}
                   style={{
-                    background: 'rgba(255,255,255,0.03)',
-                    border: '1px solid rgba(255,255,255,0.08)',
-                    borderRadius: '4px',
-                    padding: '2px 6px',
-                    fontSize: '9.5px',
-                    color: '#94A3B8',
-                    cursor: 'pointer'
+                    background: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    borderRadius: '5px',
+                    padding: '3px 8px',
+                    fontSize: '10.5px',
+                    fontWeight: 500,
+                    color: '#E2E8F0',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={e => {
+                    e.currentTarget.style.borderColor = '#22D3EE';
+                    e.currentTarget.style.color = '#FFFFFF';
+                  }}
+                  onMouseLeave={e => {
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                    e.currentTarget.style.color = '#E2E8F0';
                   }}
                 >
                   {sq}
@@ -1097,13 +1182,26 @@ export const DocumentLens: React.FC<DocumentLensProps> = ({
 
           {/* Page Answer */}
           {pageAnswer && (
-            <div style={{ background: 'rgba(0,0,0,0.5)', padding: '10px', borderRadius: '8px', border: '1px solid rgba(6, 182, 212, 0.25)', maxHeight: '160px', overflowY: 'auto' }}>
-              <p style={{ margin: 0, fontSize: '11px', color: '#E2E8F0', lineHeight: 1.5, whiteSpace: 'pre-wrap', fontFamily: 'Outfit, sans-serif' }}>
+            <div style={{
+              background: '#070C16',
+              padding: '12px 14px',
+              borderRadius: '8px',
+              border: '1.5px solid rgba(6, 182, 212, 0.4)',
+              maxHeight: '220px',
+              overflowY: 'auto'
+            }}>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                <span style={{ fontSize: '9.5px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 800, color: '#22D3EE', textTransform: 'uppercase', letterSpacing: '0.4px' }}>
+                  ✓ Grounded Page Audit Finding
+                </span>
+                <span style={{ fontSize: '9px', color: '#94A3B8' }}>P.{pageNumber}</span>
+              </div>
+              <p style={{ margin: 0, fontSize: '12px', color: '#F1F5F9', lineHeight: 1.55, whiteSpace: 'pre-wrap', fontFamily: 'Outfit, sans-serif' }}>
                 {pageAnswer}
               </p>
               {pageHighlightBbox && (
-                <div style={{ marginTop: '6px', paddingTop: '6px', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '4px', fontSize: '9.5px', color: '#22D3EE', fontFamily: 'JetBrains Mono, monospace' }}>
-                  <Crosshair size={10} />
+                <div style={{ marginTop: '8px', paddingTop: '8px', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', alignItems: 'center', gap: '6px', fontSize: '10px', color: '#22D3EE', fontFamily: 'JetBrains Mono, monospace' }}>
+                  <Crosshair size={12} />
                   <span>Target cell highlighted on canvas reticle</span>
                 </div>
               )}
