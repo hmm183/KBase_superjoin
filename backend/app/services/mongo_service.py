@@ -12,7 +12,7 @@ class MongoService:
         self.client = None
         self.db = None
         try:
-            self.client = MongoClient(settings.MONGO_URI, serverSelectionTimeoutMS=4000)
+            self.client = MongoClient(settings.MONGO_URI, serverSelectionTimeoutMS=1000)
             self.db = self.client[settings.MONGO_DB_NAME]
             # Verify connectivity
             self.client.admin.command("ping")

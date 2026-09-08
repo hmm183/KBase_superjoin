@@ -11,14 +11,25 @@ class HallucinationFirewall:
     and strips or flags ungrounded hallucinations.
     """
 
-    def __init__(self):
-        self.verified_facts = {f.fact_id: f for f in GoldCurator.get_gold_facts()}
+    def get_verified_facts(self) -> Dict[str, CanonicalFact]:
+        from backend.app.services.graph_service import graph_service
+        from backend.app.models.graph_nodes import NodeType
+        facts: Dict[str, CanonicalFact] = {f.fact_id: f for f in GoldCurator.get_gold_facts()}
+        for node_id, node_data in graph_service.nx_graph.nodes(data=True):
+            if node_data.get("node_type") == NodeType.FACT and "metadata" in node_data:
+                if node_id not in facts:
+                    try:
+                        facts[node_id] = CanonicalFact.model_validate(node_data["metadata"])
+                    except Exception:
+                        pass
+        return facts
 
     def verify_answer(self, generated_text: str) -> Dict[str, Any]:
         """
         Parses sentences/claims, checks groundability against graph evidence,
         and computes grounding metrics.
         """
+        verified_facts = self.get_verified_facts()
         # Split into sentence claims
         sentences = [s.strip() for s in re.split(r'(?<=[.!?])\s+', generated_text) if len(s.strip()) > 10]
         
@@ -31,7 +42,7 @@ class HallucinationFirewall:
             is_grounded = False
             evidence_citation = None
 
-            for f_id, fact in self.verified_facts.items():
+            for f_id, fact in verified_facts.items():
                 # If metric raw text or normalized value matches
                 val_str = str(fact.value.normalized_value)
                 if val_str in sentence or fact.value.raw_text.lower() in sentence.lower():

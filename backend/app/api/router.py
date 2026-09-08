@@ -25,17 +25,31 @@ async def get_galaxy_graph(max_year: Optional[int] = Query(None, description="Fi
     return graph_service.get_galaxy_graph(max_year=max_year)
 
 # --- 2. Facts & Provenance ---
+def _get_merged_facts_dict() -> Dict[str, Any]:
+    from backend.app.models.graph_nodes import NodeType
+    from backend.app.models.fact import CanonicalFact
+    facts: Dict[str, Any] = {f.fact_id: f for f in GoldCurator.get_gold_facts()}
+    for node_id, node_data in graph_service.nx_graph.nodes(data=True):
+        if node_data.get("node_type") == NodeType.FACT and "metadata" in node_data:
+            if node_id not in facts:
+                try:
+                    facts[node_id] = CanonicalFact.model_validate(node_data["metadata"])
+                except Exception:
+                    pass
+    return facts
+
 @api_router.get("/facts")
 async def get_all_facts():
-    facts = GoldCurator.get_gold_facts()
-    return [f.model_dump() for f in facts]
+    facts_dict = _get_merged_facts_dict()
+    return [f.model_dump() for f in facts_dict.values()]
 
 @api_router.get("/facts/{fact_id}")
 async def get_fact_by_id(fact_id: str):
-    facts = {f.fact_id: f for f in GoldCurator.get_gold_facts()}
-    if fact_id not in facts:
+    facts_dict = _get_merged_facts_dict()
+    target_id = fact_id if fact_id in facts_dict else FACT_ALIASES.get(fact_id, fact_id)
+    if target_id not in facts_dict:
         raise HTTPException(status_code=404, detail="Fact not found")
-    return facts[fact_id].model_dump()
+    return facts_dict[target_id].model_dump()
 
 # --- 3. Forensic Fact Investigator & Hypothesis Comparison ---
 class CompareRequest(BaseModel):
@@ -55,18 +69,7 @@ FACT_ALIASES = {
 
 @api_router.post("/facts/compare")
 async def compare_facts(req: CompareRequest):
-    gold_facts_list = GoldCurator.get_gold_facts()
-    facts: Dict[str, Any] = {f.fact_id: f for f in gold_facts_list}
-
-    # Dynamically include any custom or newly extracted facts stored in graph_service
-    from backend.app.models.graph_nodes import NodeType
-    for node_id, node_data in graph_service.nx_graph.nodes(data=True):
-        if node_data.get("node_type") == NodeType.FACT and "metadata" in node_data:
-            if node_id not in facts:
-                try:
-                    facts[node_id] = CanonicalFact.model_validate(node_data["metadata"])
-                except Exception:
-                    pass
+    facts = _get_merged_facts_dict()
 
     # Resolve direct IDs first, followed by known aliases
     fact_a_key = req.fact_a_id if req.fact_a_id in facts else FACT_ALIASES.get(req.fact_a_id, req.fact_a_id)

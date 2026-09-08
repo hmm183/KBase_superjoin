@@ -101,7 +101,20 @@ class GroundedQAService:
 
         # 2. Retrieve relevant canonical facts from knowledge graph
         stop_words = {"the", "and", "for", "with", "what", "this", "that", "how", "why", "are", "was", "were", "is", "in", "to", "of", "it", "who", "which", "where", "capital", "city", "tell", "explain", "about", "can", "you", "does", "delhi"}
-        canonical_facts = GoldCurator.get_gold_facts()
+        
+        from backend.app.services.graph_service import graph_service
+        from backend.app.models.graph_nodes import NodeType
+        from backend.app.models.fact import CanonicalFact
+        facts_dict = {f.fact_id: f for f in GoldCurator.get_gold_facts()}
+        for node_id, node_data in graph_service.nx_graph.nodes(data=True):
+            if node_data.get("node_type") == NodeType.FACT and "metadata" in node_data:
+                if node_id not in facts_dict:
+                    try:
+                        facts_dict[node_id] = CanonicalFact.model_validate(node_data["metadata"])
+                    except Exception:
+                        pass
+        canonical_facts = list(facts_dict.values())
+
         relevant_facts = []
         if not is_meta_query:
             query_tokens = [tok for tok in q_lower.split() if len(tok) > 3 and tok not in stop_words]
@@ -310,7 +323,9 @@ Please provide a comprehensive, direct, and well-structured answer to the user's
                     "title": retrieved_pages[0]["doc_title"]
                 }
 
-            if "conflict" in q_lower or "1266" in q_lower or "anomaly" in q_lower or "parser" in q_lower:
+            if len(relevant_facts) >= 2:
+                target_facts = {"fact_a_id": relevant_facts[0].fact_id, "fact_b_id": relevant_facts[1].fact_id}
+            elif "conflict" in q_lower or "1266" in q_lower or "anomaly" in q_lower or "parser" in q_lower:
                 target_facts = {"fact_a_id": "gold_dlhv_adj_ebitda_pres_fy24", "fact_b_id": "gold_dlhv_ebitda_parser_conflict"}
             elif "ebitda" in q_lower or "126" in q_lower or "delhivery" in q_lower:
                 target_facts = {"fact_a_id": "gold_dlhv_adj_ebitda_ar_fy24", "fact_b_id": "gold_dlhv_adj_ebitda_pres_fy24"}
@@ -321,12 +336,10 @@ Please provide a comprehensive, direct, and well-structured answer to the user's
                     target_facts = {"fact_a_id": "gold_rbi_cpi_fy26_proj", "fact_b_id": "gold_imf_cpi_fy26_proj"}
                 else:
                     target_facts = {"fact_a_id": "gold_rbi_cpi_fy24", "fact_b_id": "gold_survey_cpi_fy24"}
-            elif len(relevant_facts) >= 2:
-                target_facts = {"fact_a_id": relevant_facts[0].fact_id, "fact_b_id": relevant_facts[1].fact_id}
             elif len(relevant_facts) == 1:
-                target_facts = {"fact_a_id": relevant_facts[0].fact_id, "fact_b_id": "gold_dlhv_adj_ebitda_pres_fy24"}
-            else:
-                target_facts = {"fact_a_id": "gold_dlhv_adj_ebitda_ar_fy24", "fact_b_id": "gold_dlhv_adj_ebitda_pres_fy24"}
+                target_facts = {"fact_a_id": relevant_facts[0].fact_id, "fact_b_id": canonical_facts[1].fact_id if len(canonical_facts) > 1 else relevant_facts[0].fact_id}
+            elif canonical_facts:
+                target_facts = {"fact_a_id": canonical_facts[0].fact_id, "fact_b_id": canonical_facts[min(1, len(canonical_facts)-1)].fact_id}
 
         return {
             "query": query,

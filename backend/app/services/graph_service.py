@@ -135,13 +135,10 @@ class GraphService:
         color = "#10B981" # Emerald for verified
         pulse = 0.0
 
-        if fact.fact_id == "gold_dlhv_ebitda_parser_conflict":
-            status = "CONTRADICTION"
-            color = "#EF4444" # Ruby red
-            pulse = 1.0
-        elif fact.temporal.observation_type == ObservationType.PROJECTION:
+        if fact.temporal.observation_type == ObservationType.PROJECTION:
             status = "FORECAST"
             color = "#06B6D4" # Cyan future orbit
+            pulse = 0.3
 
         # Determine year
         year_val = 2024
@@ -217,21 +214,51 @@ class GraphService:
             if max_year is not None and node_year > max_year:
                 continue
 
+            node_type = attrs.get("node_type", NodeType.FACT)
+            status = attrs.get("status", "NORMAL")
+            color = attrs.get("color", "#10B981")
+            pulse = attrs.get("pulse_intensity", 0.0)
+
+            # Dynamically derive status and styling from incident graph edges for FACT nodes
+            if node_type == NodeType.FACT:
+                has_contradiction = False
+                has_corroboration = False
+                for u, v, edge_attrs in self.nx_graph.edges(node_id, data=True):
+                    l_type = edge_attrs.get("link_type")
+                    if l_type == LinkType.CONTRADICTS:
+                        has_contradiction = True
+                        break
+                    elif l_type == LinkType.CORROBORATES:
+                        has_corroboration = True
+
+                if has_contradiction:
+                    status = "CONTRADICTION"
+                    color = "#EF4444"
+                    pulse = 1.0
+                elif attrs.get("vintage") == "PROJECTION" or attrs.get("status") == "FORECAST" or attrs.get("metadata", {}).get("temporal", {}).get("observation_type") == "projection":
+                    status = "FORECAST"
+                    color = "#06B6D4"
+                    pulse = 0.3
+                elif has_corroboration:
+                    status = "CORROBORATED"
+                    color = "#10B981"
+                    pulse = 0.0
+
             valid_node_ids.add(node_id)
             nodes.append(GalaxyNode(
                 id=node_id,
-                node_type=attrs.get("node_type", NodeType.FACT),
+                node_type=node_type,
                 label=attrs.get("label", node_id),
                 secondary_label=attrs.get("secondary_label"),
                 value=attrs.get("value"),
                 unit=attrs.get("unit"),
-                color=attrs.get("color", "#10B981"),
+                color=color,
                 size=attrs.get("size", 12.0),
                 period=attrs.get("period"),
                 year=node_year,
                 vintage=attrs.get("vintage"),
-                status=attrs.get("status", "NORMAL"),
-                pulse_intensity=attrs.get("pulse_intensity", 0.0),
+                status=status,
+                pulse_intensity=pulse,
                 document_id=attrs.get("document_id"),
                 page_number=attrs.get("page_number"),
                 bounding_box=attrs.get("bounding_box"),
