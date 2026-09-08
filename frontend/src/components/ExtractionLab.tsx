@@ -25,8 +25,16 @@ export const ExtractionLab: React.FC<ExtractionLabProps> = ({ onOpenInLens }) =>
       {/* Header */}
       <div className="section-header-row">
         <div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+            <span style={{ fontSize: '10px', fontFamily: 'JetBrains Mono, monospace', background: 'rgba(245, 158, 11, 0.15)', color: '#F59E0B', border: '1px solid rgba(245, 158, 11, 0.3)', padding: '2px 8px', borderRadius: '4px', fontWeight: 800 }}>
+              CASE 4 BENCHMARK
+            </span>
+            <span style={{ fontSize: '11px', color: '#64748B', fontFamily: 'JetBrains Mono, monospace' }}>
+              Extraction Failure & Multi-Parser Disagreement Detection
+            </span>
+          </div>
           <h2 className="section-title">
-            <Layers size={24} style={{ color: '#C084FC' }} />
+            <Layers size={22} style={{ color: '#38BDF8' }} />
             <span>Extraction Disagreement Arena (Multi-Parser Consensus)</span>
           </h2>
           <p className="section-subtitle">
@@ -49,8 +57,8 @@ export const ExtractionLab: React.FC<ExtractionLabProps> = ({ onOpenInLens }) =>
               style={{
                 cursor: 'pointer',
                 padding: '16px',
-                borderColor: selectedDisagreement?.conflict_id === d.conflict_id ? '#A855F7' : 'var(--border-subtle)',
-                background: selectedDisagreement?.conflict_id === d.conflict_id ? 'rgba(168, 85, 247, 0.12)' : 'var(--bg-card)'
+                borderColor: selectedDisagreement?.conflict_id === d.conflict_id ? '#3B82F6' : 'var(--border-subtle)',
+                background: selectedDisagreement?.conflict_id === d.conflict_id ? 'rgba(59, 130, 246, 0.12)' : 'var(--bg-card)'
               }}
             >
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px' }}>
@@ -74,7 +82,7 @@ export const ExtractionLab: React.FC<ExtractionLabProps> = ({ onOpenInLens }) =>
           <div className="verdict-full-card">
             <div className="verdict-header-row">
               <div>
-                <span style={{ fontSize: '11px', fontFamily: 'JetBrains Mono, monospace', color: '#A855F7', display: 'block', marginBottom: '4px' }}>
+                <span style={{ fontSize: '11px', fontFamily: 'JetBrains Mono, monospace', color: '#38BDF8', display: 'block', marginBottom: '4px' }}>
                   CONFLICT ID: {selectedDisagreement.conflict_id}
                 </span>
                 <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '18px', color: '#FFFFFF' }}>{selectedDisagreement.cell_or_region}</h3>
@@ -85,8 +93,19 @@ export const ExtractionLab: React.FC<ExtractionLabProps> = ({ onOpenInLens }) =>
 
               <button
                 onClick={() => onOpenInLens(selectedDisagreement.document_id, selectedDisagreement.page_number, selectedDisagreement.parser_a_value)}
-                className="play-timeline-btn"
-                style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'linear-gradient(135deg, #4F46E5, #7C3AED)', border: 'none' }}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  background: '#2563EB',
+                  border: '1px solid #1D4ED8',
+                  color: '#FFFFFF',
+                  padding: '8px 16px',
+                  borderRadius: '6px',
+                  fontSize: '12px',
+                  fontWeight: 600,
+                  cursor: 'pointer'
+                }}
               >
                 <Eye size={14} />
                 <span>View Coordinates in Lens</span>

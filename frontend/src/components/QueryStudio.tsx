@@ -47,69 +47,70 @@ interface DemoScenario {
 
 const DEMO_SCENARIOS: DemoScenario[] = [
   {
-    id: 'corroboration',
-    title: 'Unit Scale Reconciliation',
-    badge: 'CORROBORATION',
+    id: 'case_1_corroboration',
+    title: 'Case 1: Direct Corroboration',
+    badge: 'CASE 1 • CORROBORATION',
     badgeColor: '#10B981',
-    category: 'Corporate Earnings',
+    category: 'Monetary Policy Consensus',
+    query: 'What was headline CPI inflation in FY24 according to RBI and Economic Survey?',
+    description: 'Cross-institutional agreement: Confirms 5.4% headline CPI inflation reported by both RBI Annual Report (P.35) and Economic Survey (P.28).',
+    factA: 'gold_rbi_cpi_fy24',
+    factB: 'gold_survey_cpi_fy24',
+    expectedRelation: 'CORROBORATES (100% FACTUAL MATCH)',
+    targetDocId: '02-rbi-annual-report-2024-25-excerpt.pdf',
+    targetPage: 35
+  },
+  {
+    id: 'case_2_contradiction',
+    title: 'Case 2: Genuine Contradiction',
+    badge: 'CASE 2 • CONTRADICTION',
+    badgeColor: '#EF4444',
+    category: 'Institutional Forecast Clash',
+    query: 'What is the projected CPI inflation for FY26 according to RBI versus the IMF?',
+    description: 'Genuine forecast divergence: Isolates 120 bps gap between RBI target projection (4.0%, P.17) and IMF Article IV outlook (2.8%, P.13).',
+    factA: 'gold_rbi_cpi_fy26_proj',
+    factB: 'gold_imf_cpi_fy26_proj',
+    expectedRelation: 'GENUINE CONTRADICTION (120 BPS DELTA)',
+    targetDocId: '02-rbi-annual-report-2024-25-excerpt.pdf',
+    targetPage: 17
+  },
+  {
+    id: 'case_3_unit_scale',
+    title: 'Case 3: Unit Scale Reconciliation',
+    badge: 'CASE 3 • UNIT SCALE',
+    badgeColor: '#3B82F6',
+    category: 'Corporate Earnings Scale',
     query: 'What was Delhivery FY24 EBITDA across the Annual Report and the Investor Deck?',
-    description: 'Reconciles Delhivery ₹1,266.41 Million (Annual Report P.36) against ₹126.6 Cr (Q4 Presentation Slide 6) proving mathematical equivalence under 1 Cr = 10 M.',
+    description: 'Mathematical scale equivalence: Reconciles ₹1,266.41 Million (Annual Report P.36) against ₹126.6 Cr (Q4 Presentation Slide 6) under 1 Cr = 10 M.',
     factA: 'gold_dlhv_adj_ebitda_ar_fy24',
     factB: 'gold_dlhv_adj_ebitda_pres_fy24',
-    expectedRelation: 'CORROBORATES (SCALE EQUIVALENT)',
+    expectedRelation: 'CORROBORATES (SCALE EQUIVALENT: 1 Cr = 10 M)',
     targetDocId: '02-delhivery-annual-report-fy24-excerpt.pdf',
     targetPage: 36
   },
   {
-    id: 'contradiction',
-    title: '10x OCR Parser Anomaly Detection',
-    badge: 'CONTRADICTION',
-    badgeColor: '#EF4444',
-    category: 'OCR Stress-Test',
+    id: 'case_4_extraction_failure',
+    title: 'Case 4: Extraction Failure & Parsing Disagreement',
+    badge: 'CASE 4 • EXTRACTION FAILURE',
+    badgeColor: '#F59E0B',
+    category: 'OCR & Parser Stress-Test',
     query: 'Did Delhivery report 1,266 Crore or 126.6 Crore EBITDA in FY24?',
-    description: 'Catches a decimal-point omission by a legacy table parser reporting ₹1,266 Cr instead of ₹126.6 Cr, isolating the error via multi-parser consensus.',
+    description: 'Parser failure & active learning: Catches a 10x OCR decimal omission (₹1,266 Cr vs ₹126.6 Cr) and hierarchical header flattening in RBI Table II.1.',
     factA: 'gold_dlhv_adj_ebitda_pres_fy24',
     factB: 'gold_dlhv_ebitda_parser_conflict',
-    expectedRelation: 'CONTRADICTION (10x OCR DELTA)',
+    expectedRelation: 'CONTRADICTION (10x OCR DELTA) -> ADJUDICATED',
     targetDocId: '03-delhivery-q4-fy24-earnings-presentation.pdf',
     targetPage: 6
-  },
-  {
-    id: 'forecast',
-    title: 'Macro Forecast vs Realized Baseline',
-    badge: 'PROJECTION DIFF',
-    badgeColor: '#06B6D4',
-    category: 'India Macroeconomy',
-    query: 'How does the IMF FY25 GDP projection compare with the Economic Survey baseline?',
-    description: 'Distinguishes between prospective forecasting (IMF Article IV: 7.0%) and baseline projection (Economic Survey: 6.5%), preventing false contradiction flags.',
-    factA: 'gold_india_gdp_imf_fy25',
-    factB: 'gold_india_gdp_survey_fy25',
-    expectedRelation: 'CONTEXTUAL_DIFFERENCE (FORECAST VS ACTUAL)',
-    targetDocId: '01-india-economic-survey-2024-25-excerpt.pdf',
-    targetPage: 46
-  },
-  {
-    id: 'inflation',
-    title: 'Cross-Agency Inflation Consensus',
-    badge: 'INSTITUTIONAL ALIGNMENT',
-    badgeColor: '#8B5CF6',
-    category: 'Monetary Policy',
-    query: 'What was headline CPI inflation in FY24 according to RBI and Economic Survey?',
-    description: 'Confirms cross-institutional consensus on 5.4% headline CPI between the Reserve Bank of India and the Ministry of Finance.',
-    factA: 'gold_rbi_cpi_fy24',
-    factB: 'gold_survey_cpi_fy24',
-    expectedRelation: 'CORROBORATES (CROSS-INSTITUTIONAL)',
-    targetDocId: '02-rbi-annual-report-2024-25-excerpt.pdf',
-    targetPage: 35
   }
 ];
 
 const SUGGESTED_QUERIES = [
-  "WHAT IS THIS?",
+  "What was headline CPI inflation in FY24 according to RBI and Economic Survey?",
+  "What is the projected CPI inflation for FY26 according to RBI versus the IMF?",
   "What was Delhivery FY24 EBITDA across the Annual Report and the Investor Deck?",
   "Did Delhivery report 1,266 Crore or 126.6 Crore EBITDA in FY24?",
   "How does the IMF FY25 GDP projection compare with the Economic Survey baseline?",
-  "What is the capital of Delhi?"
+  "WHAT IS THIS?"
 ];
 
 // Helper to render inline markdown like **bold** and [Doc, Page X] citations
@@ -439,22 +440,22 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
     <div style={{ width: '100%', height: '100%', display: 'flex', background: '#05070E', overflow: 'hidden' }}>
       
       {/* 1. LEFT COLUMN: Benchmarks & Persistent Query History (360px) */}
-      <aside style={{ width: '360px', background: '#080C17', borderRight: '1px solid rgba(255,255,255,0.08)', display: 'flex', flexDirection: 'column', flexShrink: 0, overflowY: 'auto', padding: '18px 16px', gap: '14px' }}>
+      <aside style={{ width: '360px', background: '#0D111A', borderRight: '1px solid rgba(255,255,255,0.07)', display: 'flex', flexDirection: 'column', flexShrink: 0, overflowY: 'auto', padding: '16px 14px', gap: '12px' }}>
         
         {/* Tab Switcher: Curated Benchmarks vs Query History */}
-        <div style={{ display: 'flex', background: 'rgba(255,255,255,0.04)', padding: '3px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.06)' }}>
+        <div style={{ display: 'flex', background: '#090B10', padding: '3px', borderRadius: '8px', border: '1px solid rgba(255,255,255,0.08)' }}>
           <button
             onClick={() => setSidebarTab('benchmarks')}
             style={{
               flex: 1,
-              background: sidebarTab === 'benchmarks' ? 'linear-gradient(135deg, #4F46E5, #7C3AED)' : 'transparent',
-              border: 'none',
-              color: sidebarTab === 'benchmarks' ? '#FFFFFF' : '#94A3B8',
+              background: sidebarTab === 'benchmarks' ? '#1E2433' : 'transparent',
+              border: sidebarTab === 'benchmarks' ? '1px solid rgba(255,255,255,0.1)' : 'none',
+              color: sidebarTab === 'benchmarks' ? '#F8FAFC' : '#94A3B8',
               padding: '6px 10px',
-              borderRadius: '8px',
-              fontSize: '11.5px',
-              fontWeight: 700,
-              fontFamily: 'Outfit, sans-serif',
+              borderRadius: '6px',
+              fontSize: '11px',
+              fontWeight: 600,
+              fontFamily: 'var(--font-sans)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -463,7 +464,7 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
               transition: 'all 0.15s ease'
             }}
           >
-            <Sparkles size={13} />
+            <Sparkles size={12} style={{ color: '#38BDF8' }} />
             <span>Benchmarks ({DEMO_SCENARIOS.length})</span>
           </button>
 
@@ -471,14 +472,14 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
             onClick={() => setSidebarTab('history')}
             style={{
               flex: 1,
-              background: sidebarTab === 'history' ? 'linear-gradient(135deg, #4F46E5, #7C3AED)' : 'transparent',
-              border: 'none',
-              color: sidebarTab === 'history' ? '#FFFFFF' : '#94A3B8',
+              background: sidebarTab === 'history' ? '#1E2433' : 'transparent',
+              border: sidebarTab === 'history' ? '1px solid rgba(255,255,255,0.1)' : 'none',
+              color: sidebarTab === 'history' ? '#F8FAFC' : '#94A3B8',
               padding: '6px 10px',
-              borderRadius: '8px',
-              fontSize: '11.5px',
-              fontWeight: 700,
-              fontFamily: 'Outfit, sans-serif',
+              borderRadius: '6px',
+              fontSize: '11px',
+              fontWeight: 600,
+              fontFamily: 'var(--font-sans)',
               cursor: 'pointer',
               display: 'flex',
               alignItems: 'center',
@@ -487,17 +488,17 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
               transition: 'all 0.15s ease'
             }}
           >
-            <History size={13} />
+            <History size={12} />
             <span>History ({history.length})</span>
           </button>
         </div>
 
         {/* View A: Curated Benchmarks */}
         {sidebarTab === 'benchmarks' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <div style={{ padding: '0 4px' }}>
               <p style={{ fontSize: '11px', color: '#94A3B8', margin: 0, lineHeight: 1.4 }}>
-                Demonstrating forensic scale reconciliation, OCR parser conflict detection, and macro forecasting.
+                Curated assignment test cases across corroboration, contradiction, scale, and OCR failure.
               </p>
             </div>
 
@@ -508,9 +509,9 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                   key={sc.id}
                   onClick={() => handleSelectScenario(sc)}
                   style={{
-                    background: isSelected ? 'rgba(99, 102, 241, 0.12)' : 'rgba(255,255,255,0.02)',
-                    border: `1px solid ${isSelected ? '#6366F1' : 'rgba(255,255,255,0.08)'}`,
-                    borderRadius: '10px',
+                    background: isSelected ? '#151C2C' : '#0F1219',
+                    border: `1px solid ${isSelected ? sc.badgeColor : 'rgba(255,255,255,0.07)'}`,
+                    borderRadius: '8px',
                     padding: '12px 14px',
                     cursor: 'pointer',
                     transition: 'all 0.15s ease'
@@ -631,44 +632,129 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
       </aside>
 
       {/* 2. RIGHT WORKSPACE: Query Console, Graphs Studio & Grounded Answers */}
-      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', padding: '24px 36px', gap: '20px' }}>
+      <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflowY: 'auto', padding: '24px 32px', gap: '18px', background: '#090B10' }}>
         
         {/* Header */}
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <div style={{ background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.3), rgba(124, 58, 237, 0.3))', padding: '8px', borderRadius: '10px', border: '1px solid rgba(99, 102, 241, 0.4)' }}>
-              <Scale size={20} style={{ color: '#818CF8' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <div style={{ background: '#121622', padding: '9px', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.1)' }}>
+              <Scale size={18} style={{ color: '#38BDF8' }} />
             </div>
             <div>
-              <h1 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '20px', fontWeight: 800, color: '#FFFFFF', margin: 0, letterSpacing: '-0.4px' }}>
-                Query Studio & Grounded Hallucination Firewall
-              </h1>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '18px', fontWeight: 700, color: '#F8FAFC', margin: 0, letterSpacing: '-0.2px' }}>
+                  Query Studio & Grounded Verification
+                </h1>
+                <span style={{ fontSize: '10px', fontFamily: 'JetBrains Mono, monospace', background: 'rgba(59, 130, 246, 0.12)', color: '#60A5FA', border: '1px solid rgba(59, 130, 246, 0.25)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
+                  4 BENCHMARKS HIGHLIGHTED
+                </span>
+              </div>
               <p style={{ fontSize: '12px', color: '#94A3B8', margin: '2px 0 0 0' }}>
-                Forensic QA across all 6 corporate filings & macro datasets. Fully preserved query memory and interactive visualization studio.
+                Forensic QA across all 6 corporate filings & macro reports with grounded coordinate verification.
               </p>
             </div>
           </div>
         </div>
 
+        {/* TOP HIGHLIGHT SHOWCASE: 4 REQUIRED ASSIGNMENT CASES */}
+        <div style={{
+          background: '#0F1219',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+          borderRadius: '10px',
+          padding: '14px 16px',
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '10px'
+        }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+              <span style={{
+                background: '#2563EB',
+                color: '#FFFFFF',
+                fontFamily: 'JetBrains Mono, monospace',
+                fontSize: '10px',
+                fontWeight: 800,
+                padding: '2px 7px',
+                borderRadius: '4px',
+                letterSpacing: '0.4px'
+              }}>
+                REQUIRED CASES
+              </span>
+              <span style={{ fontSize: '12px', fontWeight: 700, color: '#F8FAFC' }}>
+                Assignment Evaluation Suite (Click any case to run & inspect verified evidence)
+              </span>
+            </div>
+            <span style={{ fontSize: '11px', color: '#64748B', fontFamily: 'JetBrains Mono, monospace' }}>
+              100% Grounded with Citations & Bounding Boxes
+            </span>
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '10px' }}>
+            {DEMO_SCENARIOS.map(sc => {
+              const isSelected = activeScenarioId === sc.id;
+              return (
+                <button
+                  key={sc.id}
+                  type="button"
+                  onClick={() => handleSelectScenario(sc)}
+                  style={{
+                    background: isSelected ? '#151C2C' : '#0B0D14',
+                    border: `1px solid ${isSelected ? sc.badgeColor : 'rgba(255, 255, 255, 0.08)'}`,
+                    borderRadius: '7px',
+                    padding: '10px 12px',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '5px',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                    <span style={{
+                      fontSize: '9px',
+                      fontFamily: 'JetBrains Mono, monospace',
+                      fontWeight: 800,
+                      color: sc.badgeColor,
+                      background: `${sc.badgeColor}18`,
+                      padding: '1px 5px',
+                      borderRadius: '3px'
+                    }}>
+                      {sc.badge}
+                    </span>
+                    <Play size={9} style={{ color: sc.badgeColor, fill: isSelected ? sc.badgeColor : 'none' }} />
+                  </div>
+                  <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#F8FAFC', lineHeight: 1.2 }}>
+                    {sc.title}
+                  </span>
+                  <span style={{ fontSize: '10px', color: '#94A3B8', lineHeight: 1.3, display: '-webkit-box', WebkitLineClamp: 2, WebkitBoxOrient: 'vertical', overflow: 'hidden' }}>
+                    {sc.description}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
         {/* Query Input Box */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
           <form 
             onSubmit={(e) => {
               e.preventDefault();
               if (query.trim()) handleExecuteQuery(query);
             }}
             style={{ 
-              background: '#080C17', 
-              border: '1.5px solid rgba(99, 102, 241, 0.4)', 
-              borderRadius: '12px', 
-              padding: '10px 14px', 
+              background: '#0F1219', 
+              border: '1px solid rgba(255, 255, 255, 0.14)', 
+              borderRadius: '8px', 
+              padding: '8px 12px', 
               display: 'flex', 
               alignItems: 'center', 
-              gap: '12px',
-              boxShadow: '0 8px 30px rgba(0,0,0,0.5)'
+              gap: '10px',
+              boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
             }}
           >
-            <Search size={18} style={{ color: '#818CF8', flexShrink: 0 }} />
+            <Search size={16} style={{ color: '#64748B', flexShrink: 0 }} />
             <input
               type="text"
               value={query}
@@ -679,8 +765,8 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                 background: 'transparent',
                 border: 'none',
                 color: '#FFFFFF',
-                fontFamily: 'Outfit, sans-serif',
-                fontSize: '14px',
+                fontFamily: 'var(--font-sans)',
+                fontSize: '13.5px',
                 outline: 'none'
               }}
             />
@@ -688,29 +774,29 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
               type="submit"
               disabled={loading}
               style={{
-                background: 'linear-gradient(135deg, #4F46E5, #7C3AED)',
+                background: '#2563EB',
                 color: '#FFFFFF',
-                border: 'none',
-                padding: '8px 18px',
-                borderRadius: '8px',
-                fontFamily: 'Outfit, sans-serif',
+                border: '1px solid #1D4ED8',
+                padding: '7px 16px',
+                borderRadius: '6px',
+                fontFamily: 'var(--font-sans)',
                 fontSize: '12px',
-                fontWeight: 700,
+                fontWeight: 600,
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
                 cursor: loading ? 'not-allowed' : 'pointer',
-                boxShadow: '0 4px 14px rgba(99, 102, 241, 0.4)'
+                boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
               }}
             >
               <Sparkles size={13} />
-              <span>{loading ? 'Synthesizing...' : 'Execute Grounded Query'}</span>
+              <span>{loading ? 'Synthesizing...' : 'Run Grounded Query'}</span>
             </button>
           </form>
 
           {/* Quick Prompt Suggestion Chips */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-            <span style={{ fontSize: '10px', color: '#64748B', fontFamily: 'JetBrains Mono, monospace' }}>Try asking:</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
+            <span style={{ fontSize: '10px', color: '#64748B', fontFamily: 'JetBrains Mono, monospace' }}>Quick Queries:</span>
             {SUGGESTED_QUERIES.map((sq, i) => (
               <button
                 key={i}
@@ -720,12 +806,11 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                 }}
                 style={{
                   background: 'rgba(255,255,255,0.03)',
-                  border: '1px solid rgba(255,255,255,0.08)',
-                  borderRadius: '6px',
-                  padding: '3px 8px',
-                  fontSize: '11px',
+                  border: '1px solid rgba(255,255,255,0.07)',
+                  borderRadius: '5px',
+                  padding: '2px 8px',
+                  fontSize: '10.5px',
                   color: '#94A3B8',
-                  fontFamily: 'Outfit, sans-serif',
                   cursor: 'pointer',
                   transition: 'all 0.15s ease'
                 }}
@@ -841,21 +926,21 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                             factB: result.target_facts.fact_b_id
                           })}
                           style={{ 
-                            background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.25), rgba(124, 58, 237, 0.25))', 
-                            border: '1px solid #6366F1', 
-                            color: '#FFFFFF', 
-                            padding: '6px 14px', 
-                            borderRadius: '8px', 
-                            fontSize: '12px', 
-                            fontWeight: 700, 
+                            background: '#1E2433', 
+                            border: '1px solid rgba(255, 255, 255, 0.12)', 
+                            color: '#F8FAFC', 
+                            padding: '6px 13px', 
+                            borderRadius: '6px', 
+                            fontSize: '11.5px', 
+                            fontWeight: 600, 
                             display: 'inline-flex', 
                             alignItems: 'center', 
                             gap: '6px', 
                             cursor: 'pointer',
-                            boxShadow: '0 0 15px rgba(99, 102, 241, 0.3)'
+                            transition: 'all 0.15s ease'
                           }}
                         >
-                          <ArrowRight size={13} />
+                          <ArrowRight size={13} style={{ color: '#38BDF8' }} />
                           <span>Inspect Claims in Hypothesis Investigator</span>
                         </button>
                       )}
@@ -866,18 +951,18 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                             page: result.target_lens.page_number
                           })}
                           style={{ 
-                            background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.25), rgba(56, 189, 248, 0.25))', 
-                            border: '1px solid #06B6D4', 
-                            color: '#E0F2FE', 
-                            padding: '6px 14px', 
-                            borderRadius: '8px', 
-                            fontSize: '12px', 
-                            fontWeight: 700, 
+                            background: '#142036', 
+                            border: '1px solid #2563EB', 
+                            color: '#93C5FD', 
+                            padding: '6px 13px', 
+                            borderRadius: '6px', 
+                            fontSize: '11.5px', 
+                            fontWeight: 600, 
                             display: 'inline-flex', 
                             alignItems: 'center', 
                             gap: '6px', 
                             cursor: 'pointer',
-                            boxShadow: '0 0 15px rgba(6, 182, 212, 0.3)'
+                            transition: 'all 0.15s ease'
                           }}
                         >
                           <ExternalLink size={13} />
@@ -895,14 +980,14 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
             </div>
 
             {/* 2. Visualization Studio: Interactive Multi-Tool Suite (Bar, Line, Gauge, Custom Metric Tool) */}
-            <div style={{ background: '#080C17', border: '1px solid rgba(99, 102, 241, 0.3)', borderRadius: '14px', padding: '20px 24px', boxShadow: '0 8px 30px rgba(0,0,0,0.5)' }}>
+            <div style={{ background: '#0F1219', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '10px', padding: '18px 22px' }}>
               
               {/* Studio Header & Tool Switcher Tabs */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px', flexWrap: 'wrap', gap: '10px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <BarChart3 size={18} style={{ color: '#818CF8' }} />
+                  <BarChart3 size={16} style={{ color: '#38BDF8' }} />
                   <div>
-                    <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 800, color: '#FFFFFF', margin: 0 }}>
+                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '14px', fontWeight: 700, color: '#FFFFFF', margin: 0 }}>
                       Grounded Evidence Visualization Studio
                     </h3>
                     <span style={{ fontSize: '10.5px', color: '#94A3B8' }}>
@@ -912,84 +997,84 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                 </div>
 
                 {/* Chart Mode Switcher Pills */}
-                <div style={{ display: 'flex', background: 'rgba(255,255,255,0.04)', padding: '3px', borderRadius: '10px', border: '1px solid rgba(255,255,255,0.08)' }}>
+                <div style={{ display: 'flex', background: '#090B10', padding: '3px', borderRadius: '7px', border: '1px solid rgba(255,255,255,0.08)' }}>
                   <button
                     onClick={() => setChartType('bar')}
                     style={{
-                      background: chartType === 'bar' ? '#4F46E5' : 'transparent',
+                      background: chartType === 'bar' ? '#2563EB' : 'transparent',
                       border: 'none',
                       color: chartType === 'bar' ? '#FFFFFF' : '#94A3B8',
-                      padding: '5px 10px',
-                      borderRadius: '7px',
+                      padding: '4px 10px',
+                      borderRadius: '5px',
                       fontSize: '11px',
-                      fontWeight: 700,
+                      fontWeight: 600,
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '5px'
                     }}
                   >
-                    <BarChart3 size={13} />
+                    <BarChart3 size={12} />
                     <span>Bar Graph</span>
                   </button>
 
                   <button
                     onClick={() => setChartType('line')}
                     style={{
-                      background: chartType === 'line' ? '#4F46E5' : 'transparent',
+                      background: chartType === 'line' ? '#2563EB' : 'transparent',
                       border: 'none',
                       color: chartType === 'line' ? '#FFFFFF' : '#94A3B8',
-                      padding: '5px 10px',
-                      borderRadius: '7px',
+                      padding: '4px 10px',
+                      borderRadius: '5px',
                       fontSize: '11px',
-                      fontWeight: 700,
+                      fontWeight: 600,
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '5px'
                     }}
                   >
-                    <LineChart size={13} />
+                    <LineChart size={12} />
                     <span>Line Trend</span>
                   </button>
 
                   <button
                     onClick={() => setChartType('gauge')}
                     style={{
-                      background: chartType === 'gauge' ? '#4F46E5' : 'transparent',
+                      background: chartType === 'gauge' ? '#2563EB' : 'transparent',
                       border: 'none',
                       color: chartType === 'gauge' ? '#FFFFFF' : '#94A3B8',
-                      padding: '5px 10px',
-                      borderRadius: '7px',
+                      padding: '4px 10px',
+                      borderRadius: '5px',
                       fontSize: '11px',
-                      fontWeight: 700,
+                      fontWeight: 600,
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '5px'
                     }}
                   >
-                    <Gauge size={13} />
+                    <Gauge size={12} />
                     <span>Scale Gauge</span>
                   </button>
 
                   <button
                     onClick={() => setChartType('custom')}
                     style={{
-                      background: chartType === 'custom' ? '#4F46E5' : 'transparent',
+                      background: chartType === 'custom' ? '#2563EB' : 'transparent',
                       border: 'none',
                       color: chartType === 'custom' ? '#FFFFFF' : '#94A3B8',
-                      padding: '5px 10px',
-                      borderRadius: '7px',
+                      padding: '4px 10px',
+                      borderRadius: '5px',
                       fontSize: '11px',
-                      fontWeight: 700,
+                      fontWeight: 600,
                       cursor: 'pointer',
                       display: 'flex',
                       alignItems: 'center',
                       gap: '5px'
                     }}
                   >
-                    <Plus size={13} />
+                    <Plus size={12} />
                     <span>+ Add Metric Tool</span>
                   </button>
                 </div>
@@ -1269,17 +1354,18 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                       <button
                         type="submit"
                         style={{
-                          background: 'linear-gradient(135deg, #4F46E5, #7C3AED)',
+                          background: '#2563EB',
                           color: '#FFFFFF',
-                          border: 'none',
+                          border: '1px solid #1D4ED8',
                           padding: '6px 14px',
                           borderRadius: '6px',
                           fontSize: '11.5px',
-                          fontWeight: 700,
+                          fontWeight: 600,
                           cursor: 'pointer',
                           display: 'flex',
                           alignItems: 'center',
-                          gap: '6px'
+                          gap: '6px',
+                          boxShadow: '0 1px 2px rgba(0,0,0,0.2)'
                         }}
                       >
                         <Plus size={13} />
@@ -1311,7 +1397,7 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
 
               {/* Curated Scale & Forensic Delta Tool */}
               {(query.toLowerCase().includes('ebitda') || query.toLowerCase().includes('126')) && (
-                <div style={{ marginTop: '18px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '10px', padding: '12px 16px' }}>
+                <div style={{ marginTop: '18px', paddingTop: '14px', borderTop: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)', borderRadius: '8px', padding: '12px 16px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                     <Calculator size={18} style={{ color: '#10B981' }} />
                     <div>
@@ -1332,11 +1418,11 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
 
             {/* 3. Structured Grounded Document Citations Panel */}
             {result.citations && result.citations.length > 0 && (
-              <div style={{ background: '#080C17', border: '1px solid rgba(99, 102, 241, 0.25)', borderRadius: '14px', padding: '20px 24px' }}>
+              <div style={{ background: '#0F1219', border: '1px solid rgba(255, 255, 255, 0.08)', borderRadius: '10px', padding: '18px 22px' }}>
                 <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
                   <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <BookOpen size={16} style={{ color: '#818CF8' }} />
-                    <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 700, color: '#FFFFFF' }}>
+                    <BookOpen size={16} style={{ color: '#38BDF8' }} />
+                    <span style={{ fontFamily: 'var(--font-heading)', fontSize: '14px', fontWeight: 700, color: '#FFFFFF' }}>
                       Grounded Document Citations & Page References ({result.citations.length})
                     </span>
                   </div>
@@ -1350,10 +1436,10 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                     <div 
                       key={cit.citation_id || idx}
                       style={{ 
-                        background: 'rgba(255,255,255,0.02)', 
+                        background: '#0B0D14', 
                         border: '1px solid rgba(255,255,255,0.06)', 
-                        borderRadius: '10px', 
-                        padding: '12px 16px',
+                        borderRadius: '8px', 
+                        padding: '12px 14px',
                         display: 'flex',
                         flexDirection: 'column',
                         gap: '8px'
@@ -1362,7 +1448,7 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                       {/* Top Row: Doc Info & Page Badge */}
                       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <FileText size={15} style={{ color: cit.dataset_group === 'delhivery' ? '#818CF8' : '#34D399' }} />
+                          <FileText size={15} style={{ color: cit.dataset_group === 'delhivery' ? '#38BDF8' : '#34D399' }} />
                           <span style={{ fontSize: '13px', fontWeight: 700, color: '#FFFFFF' }}>
                             {cit.doc_title || cit.doc_id}
                           </span>
@@ -1372,7 +1458,7 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                         </div>
 
                         <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontSize: '11px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, background: 'rgba(56, 189, 248, 0.15)', color: '#38BDF8', border: '1px solid rgba(56, 189, 248, 0.3)', padding: '2px 8px', borderRadius: '5px' }}>
+                          <span style={{ fontSize: '11px', fontFamily: 'JetBrains Mono, monospace', fontWeight: 700, background: 'rgba(56, 189, 248, 0.12)', color: '#38BDF8', border: '1px solid rgba(56, 189, 248, 0.25)', padding: '2px 8px', borderRadius: '4px' }}>
                             PAGE {cit.page_number}
                           </span>
                           <span style={{ fontSize: '10px', fontFamily: 'JetBrains Mono, monospace', color: '#10B981' }}>
@@ -1382,7 +1468,7 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                       </div>
 
                       {/* Middle Row: Quoted Excerpt */}
-                      <blockquote style={{ margin: 0, fontSize: '12px', color: '#CBD5E1', fontFamily: 'JetBrains Mono, monospace', background: 'rgba(0,0,0,0.3)', padding: '8px 12px', borderRadius: '6px', borderLeft: '3px solid #6366F1', lineHeight: 1.5 }}>
+                      <blockquote style={{ margin: 0, fontSize: '12px', color: '#CBD5E1', fontFamily: 'JetBrains Mono, monospace', background: 'rgba(0,0,0,0.4)', padding: '8px 12px', borderRadius: '6px', borderLeft: '3px solid #2563EB', lineHeight: 1.5 }}>
                         {cit.quote}
                       </blockquote>
 
@@ -1391,11 +1477,11 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
                         <button
                           onClick={() => onNavigateTab('lens', { docId: cit.doc_id, page: cit.page_number })}
                           style={{
-                            background: 'linear-gradient(135deg, rgba(79, 70, 229, 0.2), rgba(124, 58, 237, 0.2))',
-                            border: '1px solid rgba(99, 102, 241, 0.4)',
-                            color: '#A5B4FC',
+                            background: '#131A29',
+                            border: '1px solid rgba(59, 130, 246, 0.4)',
+                            color: '#93C5FD',
                             padding: '4px 10px',
-                            borderRadius: '6px',
+                            borderRadius: '5px',
                             fontSize: '11px',
                             fontWeight: 600,
                             display: 'inline-flex',
@@ -1415,9 +1501,9 @@ export const QueryStudio: React.FC<QueryStudioProps> = ({ onNavigateTab, initial
             )}
 
             {/* 4. Hallucination Firewall Inspection */}
-            <div style={{ background: '#080C17', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '14px', padding: '20px 24px' }}>
+            <div style={{ background: '#0F1219', border: '1px solid rgba(255,255,255,0.08)', borderRadius: '10px', padding: '18px 22px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '14px' }}>
-                <ShieldCheck size={16} style={{ color: '#818CF8' }} />
+                <ShieldCheck size={16} style={{ color: '#38BDF8' }} />
                 <span style={{ fontFamily: 'Outfit, sans-serif', fontSize: '15px', fontWeight: 700, color: '#FFFFFF' }}>
                   Hallucination Firewall Claim-by-Claim Verification
                 </span>

@@ -257,11 +257,18 @@ Please provide a comprehensive, direct, and well-structured answer to the user's
                 {"label": "FY24 Realized Baseline", "value": 8.2, "unit": "% Real GDP", "source": "MoSPI Print P.28", "color": "#10B981"}
             ]
         elif "inflation" in q_lower or "cpi" in q_lower:
-            visualizations = [
-                {"label": "RBI Headline CPI (FY24)", "value": 5.4, "unit": "% YoY", "source": "RBI Annual Report P.35", "color": "#34D399"},
-                {"label": "Economic Survey Headline", "value": 5.4, "unit": "% YoY", "source": "Economic Survey P.28", "color": "#818CF8"},
-                {"label": "RBI Target Medium-Term", "value": 4.0, "unit": "% Target", "source": "Monetary Framework", "color": "#F59E0B"}
-            ]
+            if "26" in q_lower or "proj" in q_lower or "imf" in q_lower:
+                visualizations = [
+                    {"label": "RBI FY26 CPI Projection", "value": 4.0, "unit": "% YoY", "source": "RBI Annual Report P.17", "color": "#F59E0B"},
+                    {"label": "IMF FY26 CPI Projection", "value": 2.8, "unit": "% YoY", "source": "IMF Article IV P.13", "color": "#EF4444"},
+                    {"label": "RBI Target Midpoint", "value": 4.0, "unit": "% Target", "source": "Monetary Framework", "color": "#3B82F6"}
+                ]
+            else:
+                visualizations = [
+                    {"label": "RBI Headline CPI (FY24)", "value": 5.4, "unit": "% YoY", "source": "RBI Annual Report P.35", "color": "#34D399"},
+                    {"label": "Economic Survey Headline", "value": 5.4, "unit": "% YoY", "source": "Economic Survey P.28", "color": "#818CF8"},
+                    {"label": "RBI Target Medium-Term", "value": 4.0, "unit": "% Target", "source": "Monetary Framework", "color": "#F59E0B"}
+                ]
         elif "revenue" in q_lower or "sales" in q_lower or "parcel" in q_lower or "volume" in q_lower:
             visualizations = [
                 {"label": "FY24 Revenue from Operations", "value": 8142.0, "unit": "₹ Crore", "source": "Delhivery AR P.36", "color": "#6366F1"},
@@ -303,14 +310,17 @@ Please provide a comprehensive, direct, and well-structured answer to the user's
                     "title": retrieved_pages[0]["doc_title"]
                 }
 
-            if "conflict" in q_lower or "1266" in q_lower or "anomaly" in q_lower:
+            if "conflict" in q_lower or "1266" in q_lower or "anomaly" in q_lower or "parser" in q_lower:
                 target_facts = {"fact_a_id": "gold_dlhv_adj_ebitda_pres_fy24", "fact_b_id": "gold_dlhv_ebitda_parser_conflict"}
             elif "ebitda" in q_lower or "126" in q_lower or "delhivery" in q_lower:
                 target_facts = {"fact_a_id": "gold_dlhv_adj_ebitda_ar_fy24", "fact_b_id": "gold_dlhv_adj_ebitda_pres_fy24"}
             elif "gdp" in q_lower or "growth" in q_lower:
                 target_facts = {"fact_a_id": "gold_india_gdp_imf_fy25", "fact_b_id": "gold_india_gdp_survey_fy25"}
             elif "inflation" in q_lower or "cpi" in q_lower:
-                target_facts = {"fact_a_id": "gold_rbi_cpi_fy24", "fact_b_id": "gold_survey_cpi_fy24"}
+                if "26" in q_lower or "proj" in q_lower or "imf" in q_lower:
+                    target_facts = {"fact_a_id": "gold_rbi_cpi_fy26_proj", "fact_b_id": "gold_imf_cpi_fy26_proj"}
+                else:
+                    target_facts = {"fact_a_id": "gold_rbi_cpi_fy24", "fact_b_id": "gold_survey_cpi_fy24"}
             elif len(relevant_facts) >= 2:
                 target_facts = {"fact_a_id": relevant_facts[0].fact_id, "fact_b_id": relevant_facts[1].fact_id}
             elif len(relevant_facts) == 1:

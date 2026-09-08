@@ -84,7 +84,7 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
       <div className="section-header-row">
         <div>
           <h2 className="section-title">
-            <GitCompare size={24} style={{ color: '#818CF8' }} />
+            <GitCompare size={22} style={{ color: '#38BDF8' }} />
             <span>Forensic Fact Investigator & Contradiction Observatory</span>
           </h2>
           <p className="section-subtitle">
@@ -120,6 +120,64 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
             ))}
           </select>
         </div>
+      </div>
+
+      {/* 4 Official Cases Preset Selector */}
+      <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '8px',
+        background: '#0D111A',
+        border: '1px solid rgba(255, 255, 255, 0.08)',
+        borderRadius: '8px',
+        padding: '8px 12px',
+        flexWrap: 'wrap'
+      }}>
+        <span style={{
+          fontSize: '10px',
+          fontFamily: 'JetBrains Mono, monospace',
+          fontWeight: 800,
+          background: '#2563EB',
+          color: '#FFFFFF',
+          padding: '2px 6px',
+          borderRadius: '4px'
+        }}>
+          REQUIRED CASES
+        </span>
+        <span style={{ fontSize: '11px', color: '#94A3B8', marginRight: '4px' }}>
+          One-Click Presets:
+        </span>
+        {[
+          { label: 'Case 1: Corroboration (CPI 5.4%)', a: 'gold_rbi_cpi_fy24', b: 'gold_survey_cpi_fy24', color: '#10B981' },
+          { label: 'Case 2: Contradiction (FY26 CPI 4.0% vs 2.8%)', a: 'gold_rbi_cpi_fy26_proj', b: 'gold_imf_cpi_fy26_proj', color: '#EF4444' },
+          { label: 'Case 3: Unit Scale (₹126.6 Cr vs ₹1,266.41 M)', a: 'gold_dlhv_adj_ebitda_ar_fy24', b: 'gold_dlhv_adj_ebitda_pres_fy24', color: '#3B82F6' },
+          { label: 'Case 4: OCR Anomaly (₹126.6 Cr vs ₹1,266 Cr)', a: 'gold_dlhv_adj_ebitda_pres_fy24', b: 'gold_dlhv_ebitda_parser_conflict', color: '#F59E0B' }
+        ].map((c, i) => (
+          <button
+            key={i}
+            onClick={() => {
+              setFactAId(c.a);
+              setFactBId(c.b);
+            }}
+            style={{
+              background: (factAId === c.a && factBId === c.b) ? '#1E2433' : 'rgba(255, 255, 255, 0.03)',
+              border: `1px solid ${(factAId === c.a && factBId === c.b) ? c.color : 'rgba(255, 255, 255, 0.08)'}`,
+              color: (factAId === c.a && factBId === c.b) ? '#FFFFFF' : '#CBD5E1',
+              padding: '3px 9px',
+              borderRadius: '5px',
+              fontSize: '11px',
+              fontWeight: 500,
+              cursor: 'pointer',
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '5px',
+              transition: 'all 0.15s ease'
+            }}
+          >
+            <span style={{ width: '6px', height: '6px', borderRadius: '50%', background: c.color }} />
+            <span>{c.label}</span>
+          </button>
+        ))}
       </div>
 
       {/* Dual-Pane Forensic Comparison Cards */}
@@ -274,10 +332,23 @@ export const FactInvestigator: React.FC<FactInvestigatorProps> = ({
 
             <button
               onClick={() => onSendToActiveLearning(factAId, factBId)}
-              className="play-timeline-btn"
-              style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'linear-gradient(135deg, #4F46E5, #7C3AED)', border: 'none', padding: '10px 18px' }}
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                background: '#2563EB',
+                border: '1px solid #1D4ED8',
+                color: '#FFFFFF',
+                padding: '8px 16px',
+                borderRadius: '6px',
+                fontSize: '12px',
+                fontWeight: 600,
+                cursor: 'pointer',
+                boxShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                transition: 'all 0.15s ease'
+              }}
             >
-              <Send size={14} />
+              <Send size={13} />
               <span>Send to Active Learning Queue</span>
             </button>
           </div>

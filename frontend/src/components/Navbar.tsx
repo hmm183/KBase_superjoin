@@ -33,15 +33,15 @@ export const Navbar: React.FC<NavbarProps> = ({
       <div className="brand-section">
         <div className="brand-logo-glow">
           <div className="brand-logo-inner">
-            <Orbit size={20} className="spin-slow" />
+            <Orbit size={18} />
           </div>
         </div>
         <div>
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <span className="brand-title">EVIDENCE GALAXY</span>
-            <span className="brand-badge">Graph Intelligence</span>
+            <span className="brand-badge">Verification Layer</span>
           </div>
-          <p className="brand-subtitle">Multimodal Temporal Knowledge & Verification Layer</p>
+          <p className="brand-subtitle">Multimodal Fact Verification & Forensic Grounded RAG</p>
         </div>
       </div>
 
@@ -51,7 +51,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => setActiveTab('galaxy')}
           className={`nav-pill-btn ${activeTab === 'galaxy' ? 'active' : ''}`}
         >
-          <Orbit size={15} />
+          <Orbit size={14} />
           <span>Universe</span>
         </button>
 
@@ -59,7 +59,7 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => setActiveTab('investigator')}
           className={`nav-pill-btn ${activeTab === 'investigator' ? 'active' : ''}`}
         >
-          <GitCompare size={15} />
+          <GitCompare size={14} />
           <span>Investigator</span>
         </button>
 
@@ -67,16 +67,30 @@ export const Navbar: React.FC<NavbarProps> = ({
           onClick={() => setActiveTab('lens')}
           className={`nav-pill-btn ${activeTab === 'lens' ? 'active' : ''}`}
         >
-          <FileSearch size={15} />
+          <FileSearch size={14} />
           <span>Document Lens</span>
         </button>
 
         <button
           onClick={() => setActiveTab('query')}
           className={`nav-pill-btn ${activeTab === 'query' ? 'active' : ''}`}
+          style={{ position: 'relative' }}
         >
-          <Sparkles size={15} style={{ color: activeTab === 'query' ? '#FFFFFF' : '#818CF8' }} />
-          <span>Query & Demos</span>
+          <Sparkles size={14} style={{ color: activeTab === 'query' ? '#38BDF8' : '#94A3B8' }} />
+          <span>Query Studio</span>
+          <span style={{
+            fontSize: '9px',
+            fontFamily: 'var(--font-mono)',
+            background: activeTab === 'query' ? 'rgba(56, 189, 248, 0.18)' : 'rgba(255, 255, 255, 0.08)',
+            color: activeTab === 'query' ? '#38BDF8' : '#94A3B8',
+            border: `1px solid ${activeTab === 'query' ? 'rgba(56, 189, 248, 0.3)' : 'rgba(255, 255, 255, 0.1)'}`,
+            padding: '1px 5px',
+            borderRadius: '4px',
+            fontWeight: 700,
+            marginLeft: '2px'
+          }}>
+            4 Cases
+          </span>
         </button>
 
         <button

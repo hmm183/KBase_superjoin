@@ -200,11 +200,11 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({ onOpenDocumentLens }) 
           <button
             onClick={() => onOpenDocumentLens(doc.document_id, 1)}
             style={{ 
-              background: '#4F46E5', 
-              color: '#FFFFFF', 
-              border: 'none', 
-              padding: '5px 10px', 
-              borderRadius: '6px', 
+              background: '#152033', 
+              color: '#60A5FA', 
+              border: '1px solid #2563EB', 
+              padding: '4px 10px', 
+              borderRadius: '5px', 
               fontSize: '11px', 
               fontWeight: 600, 
               display: 'inline-flex', 
@@ -304,67 +304,64 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({ onOpenDocumentLens }) 
             onClick={() => !isUploading && fileInputRef.current?.click()}
             disabled={isUploading}
             style={{
-              background: 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%)',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
+              background: '#2563EB',
+              border: '1px solid #1D4ED8',
               color: '#FFFFFF',
-              padding: '10px 18px',
-              borderRadius: '10px',
-              fontSize: '13px',
-              fontWeight: 800,
-              fontFamily: 'Outfit, sans-serif',
+              padding: '8px 16px',
+              borderRadius: '7px',
+              fontSize: '12.5px',
+              fontWeight: 600,
+              fontFamily: 'var(--font-sans)',
               cursor: isUploading ? 'not-allowed' : 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '8px',
-              boxShadow: '0 0 25px rgba(124, 58, 237, 0.6)',
-              transition: 'all 0.2s ease'
+              gap: '6px',
+              boxShadow: '0 1px 2px rgba(0,0,0,0.3)',
+              transition: 'all 0.15s ease'
             }}
           >
-            <UploadCloud size={16} />
+            <UploadCloud size={15} />
             <span>+ Upload PDF</span>
           </button>
         </div>
       </div>
 
-      {/* 2. Prominent Upload Hero Card (High Visibility & Space) */}
-      <div style={{ marginBottom: '26px', flexShrink: 0 }}>
+      {/* 2. Prominent Upload Hero Card (Linear / Vercel Pro Style) */}
+      <div style={{ marginBottom: '22px', flexShrink: 0 }}>
         <div 
           onClick={() => !isUploading && fileInputRef.current?.click()}
           style={{ 
-            background: 'linear-gradient(135deg, rgba(30, 41, 59, 0.55), rgba(15, 23, 42, 0.8))', 
-            border: '2px dashed #818CF8', 
-            borderRadius: '16px', 
-            padding: '28px 36px', 
+            background: '#0F1219', 
+            border: '1px dashed #2C354A', 
+            borderRadius: '12px', 
+            padding: '24px 30px', 
             display: 'flex', 
             alignItems: 'center', 
             justifyContent: 'space-between', 
             cursor: isUploading ? 'not-allowed' : 'pointer',
-            transition: 'all 0.2s ease',
-            boxShadow: '0 10px 40px rgba(99, 102, 241, 0.18)',
+            transition: 'all 0.15s ease',
+            boxShadow: '0 2px 8px rgba(0, 0, 0, 0.4)',
             position: 'relative',
             overflow: 'hidden'
           }}
         >
-          {/* Subtle Ambient Glow */}
-          <div style={{ position: 'absolute', top: '-40px', right: '20%', width: '200px', height: '120px', background: 'radial-gradient(circle, rgba(99, 102, 241, 0.25) 0%, transparent 70%)', pointerEvents: 'none' }} />
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '22px', zIndex: 1 }}>
-            <div style={{ background: 'linear-gradient(135deg, #4F46E5, #9333EA)', width: '58px', height: '58px', borderRadius: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', boxShadow: '0 0 30px rgba(124, 58, 237, 0.75)', flexShrink: 0 }}>
-              <UploadCloud size={30} style={{ color: '#FFFFFF' }} />
+          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', zIndex: 1 }}>
+            <div style={{ background: '#161F32', border: '1px solid #2563EB', width: '48px', height: '48px', borderRadius: '10px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+              <UploadCloud size={24} style={{ color: '#38BDF8' }} />
             </div>
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                <span style={{ fontSize: '10px', fontFamily: 'JetBrains Mono, monospace', background: 'rgba(99, 102, 241, 0.25)', color: '#A5B4FC', border: '1px solid rgba(99, 102, 241, 0.5)', padding: '2px 8px', borderRadius: '4px', fontWeight: 700 }}>
+                <span style={{ fontSize: '10px', fontFamily: 'JetBrains Mono, monospace', background: 'rgba(59, 130, 246, 0.12)', color: '#60A5FA', border: '1px solid rgba(59, 130, 246, 0.25)', padding: '1px 6px', borderRadius: '4px', fontWeight: 700 }}>
                   PDF REPOSITORY INGESTION
                 </span>
                 <span style={{ fontSize: '11px', color: '#10B981', fontFamily: 'JetBrains Mono, monospace' }}>
                   • PyMuPDF Topology + OCR Consensus Ready
                 </span>
               </div>
-              <h3 style={{ fontFamily: 'Outfit, sans-serif', fontSize: '18px', fontWeight: 800, color: '#FFFFFF', margin: 0, letterSpacing: '-0.3px' }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '16px', fontWeight: 700, color: '#F8FAFC', margin: 0 }}>
                 {isUploading ? `Ingesting "${uploadedFilename}"...` : 'Upload Custom Corporate PDF Filing'}
               </h3>
-              <p style={{ fontSize: '13px', color: '#94A3B8', margin: '4px 0 0 0', lineHeight: 1.5 }}>
+              <p style={{ fontSize: '12px', color: '#94A3B8', margin: '4px 0 0 0', lineHeight: 1.4 }}>
                 Drag and drop any financial report, earnings deck, or economic paper (or click button to browse).
               </p>
             </div>
@@ -374,25 +371,24 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({ onOpenDocumentLens }) 
             type="button"
             disabled={isUploading}
             style={{
-              background: 'linear-gradient(135deg, #4F46E5 0%, #7C3AED 50%, #EC4899 100%)',
-              border: '1.5px solid rgba(255, 255, 255, 0.4)',
+              background: '#2563EB',
+              border: '1px solid #1D4ED8',
               color: '#FFFFFF',
-              padding: '16px 32px',
-              borderRadius: '12px',
-              fontSize: '15px',
-              fontWeight: 800,
-              fontFamily: 'Outfit, sans-serif',
+              padding: '10px 22px',
+              borderRadius: '8px',
+              fontSize: '13px',
+              fontWeight: 600,
+              fontFamily: 'var(--font-sans)',
               cursor: isUploading ? 'not-allowed' : 'pointer',
               display: 'flex',
               alignItems: 'center',
-              gap: '10px',
-              boxShadow: '0 0 35px rgba(124, 58, 237, 0.85)',
-              letterSpacing: '0.3px',
+              gap: '8px',
+              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.3)',
               zIndex: 1,
               flexShrink: 0
             }}
           >
-            <UploadCloud size={20} />
+            <UploadCloud size={17} />
             <span>{isUploading ? 'Uploading...' : 'Upload PDF Document'}</span>
           </button>
           <input 
@@ -447,13 +443,13 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({ onOpenDocumentLens }) 
           <button
             onClick={() => setFilterGroup('all')}
             style={{ 
-              background: filterGroup === 'all' ? '#4F46E5' : '#0F172A', 
+              background: filterGroup === 'all' ? '#1E2433' : '#0F1219', 
               color: filterGroup === 'all' ? '#FFFFFF' : '#94A3B8', 
-              border: `1px solid ${filterGroup === 'all' ? 'rgba(99,102,241,0.5)' : 'rgba(255,255,255,0.08)'}`, 
+              border: `1px solid ${filterGroup === 'all' ? 'rgba(255,255,255,0.16)' : 'rgba(255,255,255,0.08)'}`, 
               padding: '5px 12px', 
               borderRadius: '6px', 
               fontSize: '11px', 
-              fontFamily: 'Outfit, sans-serif', 
+              fontFamily: 'var(--font-sans)', 
               fontWeight: 600, 
               cursor: 'pointer' 
             }}
@@ -463,13 +459,13 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({ onOpenDocumentLens }) 
           <button
             onClick={() => setFilterGroup('delhivery')}
             style={{ 
-              background: filterGroup === 'delhivery' ? 'rgba(99, 102, 241, 0.25)' : '#0F172A', 
-              color: filterGroup === 'delhivery' ? '#A5B4FC' : '#94A3B8', 
-              border: `1px solid ${filterGroup === 'delhivery' ? '#6366F1' : 'rgba(255,255,255,0.08)'}`, 
+              background: filterGroup === 'delhivery' ? '#1E2433' : '#0F1219', 
+              color: filterGroup === 'delhivery' ? '#60A5FA' : '#94A3B8', 
+              border: `1px solid ${filterGroup === 'delhivery' ? '#2563EB' : 'rgba(255,255,255,0.08)'}`, 
               padding: '5px 12px', 
               borderRadius: '6px', 
               fontSize: '11px', 
-              fontFamily: 'Outfit, sans-serif', 
+              fontFamily: 'var(--font-sans)', 
               fontWeight: 600, 
               display: 'flex', 
               alignItems: 'center', 
@@ -483,13 +479,13 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({ onOpenDocumentLens }) 
           <button
             onClick={() => setFilterGroup('macro')}
             style={{ 
-              background: filterGroup === 'macro' ? 'rgba(16, 185, 129, 0.2)' : '#0F172A', 
+              background: filterGroup === 'macro' ? '#1E2433' : '#0F1219', 
               color: filterGroup === 'macro' ? '#34D399' : '#94A3B8', 
               border: `1px solid ${filterGroup === 'macro' ? '#10B981' : 'rgba(255,255,255,0.08)'}`, 
               padding: '5px 12px', 
               borderRadius: '6px', 
               fontSize: '11px', 
-              fontFamily: 'Outfit, sans-serif', 
+              fontFamily: 'var(--font-sans)', 
               fontWeight: 600, 
               display: 'flex', 
               alignItems: 'center', 
@@ -503,13 +499,13 @@ export const DocumentHub: React.FC<DocumentHubProps> = ({ onOpenDocumentLens }) 
           <button
             onClick={() => setFilterGroup('custom')}
             style={{ 
-              background: filterGroup === 'custom' ? '#0369A1' : '#0F172A', 
+              background: filterGroup === 'custom' ? '#1E2433' : '#0F1219', 
               color: filterGroup === 'custom' ? '#38BDF8' : '#94A3B8', 
-              border: `1px solid ${filterGroup === 'custom' ? 'rgba(56,189,248,0.5)' : 'rgba(255,255,255,0.08)'}`, 
+              border: `1px solid ${filterGroup === 'custom' ? '#0284C7' : 'rgba(255,255,255,0.08)'}`, 
               padding: '5px 12px', 
               borderRadius: '6px', 
               fontSize: '11px', 
-              fontFamily: 'Outfit, sans-serif', 
+              fontFamily: 'var(--font-sans)', 
               fontWeight: 600, 
               cursor: 'pointer' 
             }}
